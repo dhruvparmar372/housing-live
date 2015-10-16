@@ -49,8 +49,7 @@
         // Analyse BHK
         apartment_element = get_apartment_type(lowerText);
         budget_element = get_budget_range(apartment_element.updated_text);
-        console.log(element)
-        return element
+        return apartment_element;
         // Analyse Locality
         // Analyse Budget
         
