@@ -2,6 +2,7 @@
     'use strict';
 
     var body;
+    var extra_elements_apartments = ['apartment', 'flat', 'home', 'house'];
     var apartment_type_id = [
         ['1 RK', '1 Room Kitchen', '1 Room'],
         ['1 BHK', '1 Bedroom Hall Kitchen', '1 Bedroom Kitchen Hall', '1 Kitchen Bedroom Hall', '2 Rooms', '1 Bedroom'],
@@ -11,33 +12,38 @@
         , '4 Bedroom Hall Kitchen', '5 Bedroom Hall Kitchen', '6 Bedroom Hall Kitchen', '7 Bedroom Hall Kitchen']
     ];
     function get_locality_filter(text){
+        extra_elements_apartments.forEach(function(val){
+            text = text.replace(val, '')
+        })
+        text = text.replace(' s ', '');
         var exp_text = text;
         var apt_type
-        exp_text = exp_text.replace(/ /g, '').toLowerCase()
+        exp_text = exp_text.toLowerCase()
         var i = 0;
         while(i < apartment_type_id.length){
             var j = 0;
             while(j < apartment_type_id[i].length){
-                apt_type = apartment_type_id[i][j].toLowerCase().replace(/ /g, '')
-                if (exp_text.indexOf(apt_type.toLowerCase()) > -1){
-                    return apartment_type_id[i][j]
+                apt_type = apartment_type_id[i][j].toLowerCase()
+                if (exp_text.indexOf(apt_type) > -1){
+                    text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
+                    return {id: i, updated_text: text};
                 }
                 j++;
             }
             i++;
-        }  
-    }
-
-    function lowerCaser(arr){
-
+        }
+        return{}
     }
 
     function analyse_elements(text){
+        var element
         // Convert tokens to lowercase
-        var lowerText = text.toLowerCase() 
+        var lowerText = text.toLowerCase()
         // Remove All is am are
         // Analyse BHK
-        element = get_locality_filter()
+        element = get_locality_filter(lowerText)
+        console.log(element)
+        return element
         // Analyse Locality
         // Analyse Budget
     }
