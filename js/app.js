@@ -50,11 +50,19 @@
         // Remove All is am are
         // Analyse BHK
         apartment_element = get_apartment_type(lowerText);
-        budget_element = get_budget_range(apartment_element.updated_text);
+        //budget_element = get_budget_range(apartment_element.updated_text);
+        if(apartment_element.updated_text){
+            search_locality(apartment_element.updated_text, getLocalityResults);
+        }
         return apartment_element;
         // Analyse Locality
+
         // Analyse Budget
         
+    }
+
+    function getLocalityResults(localityId){
+        console.log("Location id is "+localityId);
     }
     
     
