@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    var body;
+    var body, results_list;
     var filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid"];
     // var filter_tokens = ["Apartment","of","type","kind","size","specifications","area","rooms","home","house","for","a","an","apartment","flight","flat","property","duplex","search","find","me","get","query","Google","give","need","want","look","up","requirement","provide","result","the","bring","in","Indore","location","near","around","nearby","15","Powai","should","be","locationshould","I","am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","face","middle", "within", "between", "mid"];
     
@@ -29,7 +29,7 @@
          var post_elements = ['Bedroom', 'Room']
          return post_elements;
     }
-    
+
     function get_apartment_type(text){
         var extra_elements_apartments = get_filter_keywords();
         var apartment_type_id = get_apartment_type_mapping();
@@ -47,7 +47,7 @@
                 if (exp_text.indexOf(apt_type) > -1){
                     text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
                     text = text.replace(' s ', '');
-                    return {id: i, updated_text: text};
+                    return {id: i+1, updated_text: text};
                 }
                 j++;
             }
@@ -70,47 +70,70 @@
         // Analyse BHK
         // Analyse Budget
         apartment_element = get_apartment_type(lowerText);
-        budget_element = get_budget_range(apartment_element.updated_text);
+        //budget_element = get_budget_range(apartment_element.updated_text);
+        if(apartment_element.updated_text){
+            search_locality(apartment_element.updated_text, getLocalityResults);
+        }
         return apartment_element;
         // Analyse Locality
     }
+
+    function getLocalityResults(localityId){
+        console.log("Location id is "+localityId);
+    }
     
+    
+    //INPUT BOX Component
     var InputBox = function(options){
-        var button = $("<button id='start-search-btn'>Start Search</button>"),
-            recognizer = new webkitSpeechRecognition();
+        var element = $(options.append_to),
+            button = $("<button id='start-search-btn' class='app-btn'>Start Search</button>"),
+            recognizer = new webkitSpeechRecognition(),
+            cb = options.done_callback,
+            self = this;
         
+        var start_recording = function(){
+            if(self.listening)
+                return;
+            self.listening = true;
+            element.addClass("loading");
+            recognizer.start();
+        }
+
         var recognizer_result = function(event) {
+            var cb = options.done_callback
             if (event.results.length > 0) {
                 var result = event.results[event.results.length-1];
                 if(result.isFinal) {
-                    console.log(result[0].transcript);
-                    analyse_elements(result[0].transcript) 
+                    if(typeof cb === "function"){
+                        cb.call(this,result[0].transcript);
+                    }
+                    element.removeClass('loading');
+                    self.listening = false;
                 }
             }  
         };
 
         recognizer.lang = options.language || "en";
         recognizer.onresult = recognizer_result;
-        
-        var start_voice_search = function(){
-            recognizer.start();
-        }
-        $(button).bind('click',start_voice_search);
-        $(options.append_to).append(button);
+        button.bind('click',start_recording);
+        element.append(button);
     }
+
+    
+
 
     function cache_nodes(){
         body = $('body');
+        results_list = $("#results-list");
     }
 
     var initialize = function(){
         cache_nodes();
-
-        var input_button = new InputBox({append_to:"#main-content"});
-        console.log('load app');
+        var input_button = new InputBox({
+            append_to     : "#search-box",
+            done_callback : analyse_elements
+        });
     }
 
-
     $(document).ready(initialize());
-
 })();
