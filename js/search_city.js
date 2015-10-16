@@ -412,7 +412,7 @@ city_location["mumbai"] = [
 "Goregaon East",
 "Goregaon West",
 "Grant Road",
-"IIT Powai",
+"Powai",
 "JB Nagar",
 "Jogeshwari East",
 "Jogeshwari West",
