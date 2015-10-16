@@ -58,7 +58,31 @@
     }
 
     function get_budget_range(text){
-        return true
+        var budget_range_arr = text.split(' ').filter(function(elem){ if (parseInt(elem)) { return parseInt(elem);}});
+        var return_obj = {};
+        if (budget_range_arr.length){
+            var final_budget_arr = [];
+            final_budget_arr = budget_range_arr.filter(function(elem){if (elem > 3500){ return elem; }});
+            if (final_budget_arr.length){
+                final_budget_arr = final_budget_arr.sort()
+                return_obj.max_budget = null;
+                return_obj.min_budget = null;
+                if (final_budget_arr.length == 1){
+                    return_obj.max_budget = final_budget_arr[0];
+                }
+                else if (final_budget_arr.length == 2){
+                    return_obj.min_budget = final_budget_arr[0];
+                    return_obj.max_budget = final_budget_arr[1];
+                }
+                else{
+                    return_obj.min_budget = final_budget_arr[0];
+                    return_obj.max_budget = final_budget_arr[final_budget_arr.length-1];
+                }
+                return return_obj
+            }
+            return null;
+        }
+        return null;
     }
 
     function analyse_elements(text){
@@ -70,7 +94,7 @@
         // Analyse BHK
         // Analyse Budget
         apartment_element = get_apartment_type(lowerText);
-        //budget_element = get_budget_range(apartment_element.updated_text);
+        budget_element = get_budget_range(apartment_element.updated_text);
         if(apartment_element.updated_text){
             search_locality(apartment_element.updated_text, getLocalityResults);
         }
