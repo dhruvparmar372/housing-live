@@ -531,8 +531,7 @@
                 return $('#main-content').addClass('empty-list')
             }else{
                 $('#main-content').removeClass('empty-list')
-            }
-            var tags_list = tags.reduce(function(list,tag){    
+            } 
             tags_list.empty();
             var tag_nodes = [];
             tags.forEach(function(tag){
@@ -550,7 +549,6 @@
                     nodes.push(service_obj.get_rendered_item(result));
                 });
             });
-            $element.append(tags_list)
             setTimeout(function(){
                $("html, body").animate({ scrollTop: $('#results-list').offset().top }, 500)
             },100)
