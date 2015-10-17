@@ -9,6 +9,7 @@
 
     var TextAnalyser = function(query,done_callback){
         
+       
         var filter_object = {
                                 services : [],
                                 filters : {}
@@ -17,7 +18,10 @@
             filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid"],
             price_keywords = ['lakhs', 'lakh', 'million', 'millions', 'crore', 'crores', 'thousand', 'thousands'],
             price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000'],
-            query = query.toLowerCase();
+            query = query && query.toLowerCase();
+        
+        query = replaceAll(' to ', ' 2 ', query);
+        query = replaceAll(' by ', ' buy ', query);
 
         
         console.log('initial query ', query);
@@ -60,7 +64,7 @@
                     if (exp_text.indexOf(apt_type) > -1){
                         text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
                         text = text.replace(' s ', '');
-                        return {id: [i+1], updated_text: text};
+                        return {id: [i+1], updated_text: text, apartment_type_tags : apartment_type_id[i][j]};
                     }
                     j++;
                 }
@@ -76,14 +80,14 @@
                     if (exp_text.indexOf(apt_type) > -1){
                         text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
                         text = text.replace(' s ', '');
-                        return {id: [i+1], updated_text: text};
+                        return {id: [i+1], updated_text: text, apartment_type_tags : apartment_type_id[i][j]};
                     }
                     j++;
                 }
                 i++;
             }
             post_elements = get_post_filter_keywords()
-            return{id: [], updated_text: text}
+            return{id: [], updated_text: text, apartment_type_tags: []}
         }
 
         function get_filter_keywords(){
@@ -111,7 +115,7 @@
 
         //Budget Analyser Methods
         function analyse_budget(){
-            query = purify_budget(query.replace('-', ' '));
+            query = purify_budget(replaceAll('-', ' ',query));
             var budget_element = get_budget_range(query);
             filter_object.filters.min_price = budget_element.min_budget;
             filter_object.filters.max_price = budget_element.max_budget;
@@ -178,6 +182,9 @@
         function sortNumber(a,b) {
             return a - b;
         }
+        function replaceAll(find, replace, str) {
+          return str.replace(new RegExp(find, 'g'), replace);
+        }
 
 
         //Locality Analyser
@@ -237,7 +244,7 @@
         var apt_result = analyse_apartment_type(query);
         query = apt_result.updated_text;
         filter_object.filters.apartment_type_id = apt_result.id;
-        
+        filter_object.apartment_type_tags = apt_result.apartment_type_tags;
         analyse_budget();
         analyse_locality();
 
@@ -328,8 +335,9 @@
         };
         
         
-        var options = $.extend(options,defaults),
-            $element = $(options.append_to);
+        var options     = $.extend(options,defaults),
+            filter_tags = [],
+            $element    = $(options.append_to);
         
         options.filter = $.extend(options.filters,base_filters);
 
@@ -365,7 +373,7 @@
                         url = url;
                 }
             }
-            return url;            
+            return url;
         }
 
 
