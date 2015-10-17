@@ -300,7 +300,7 @@ html,body {
     background-color : white;
     border-radius    : 2px;
     overflow         : hidden;
-    min-height       : 375px;
+    min-height       : 385px;
     box-shadow       : 1px 1px 3px 0 rgba(0,0,0,.05);
     text-decoration  : none;
     color            : #333;
@@ -317,17 +317,14 @@ html,body {
 }
 
 .result::after{
-    content         : '';
-    position        : absolute;
-    bottom          : 27px;
-    right           : 5%;
-    padding         : 1px 3px;
-    border          : 1px solid grey;
-    border-radius   : 2px;
-    color           : white;
-    background-color: grey;
-    font-size       : 14px;
-    font-weight     : lighter;
+    content       : '';
+    position      : absolute;
+    bottom        : 27px;
+    right         : 5%;
+    padding       : 5px 10px;
+    border        : 1px solid #2ecc71;
+    border-radius : 2px;
+    color         : #2ecc71;
 }
 .result[service="rent"]::after{
      content       : 'Rent';

@@ -95,7 +95,7 @@
                 i++;
             }
             post_elements = get_post_filter_keywords()
-            return{id: [], updated_text: text, apartment_type_tag: []}
+            return{id: [], updated_text: text, apartment_type_tag: ""}
         }
 
         function get_filter_keywords(){
@@ -444,7 +444,6 @@
             sort_key         : "relevance",
             results_per_page : 30
         };
-
         var tags = [];
         if(options.apartment_type_tag)
             tags.push(options.apartment_type_tag);
@@ -508,6 +507,15 @@
                     default :
                         url = url;
                 }
+                if(service === "pg" || service === "rent"){
+                    if(key === 'max_price' && filter_object['max_price']){
+                        url += "&max_rent=" + filter_object['max_price'];
+                    }
+                    if(key === 'min_price' && filter_object['min_price']){
+                        url += "&min_rent=" + filter_object['min_price'];
+                    }
+                }
+
             }
             return url;
         }
