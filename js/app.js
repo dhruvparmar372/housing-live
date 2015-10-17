@@ -513,7 +513,17 @@
                 service : service
             });
         })).then(function(service_results){
-            
+            var is_empty = true;
+            service_results.forEach(function(val){
+                if(val.results && val.results.length){
+                    is_empty = false
+                }
+            })
+            if(is_empty){
+                return $('#main-content').addClass('empty-list')
+            }else{
+                $('#main-content').removeClass('empty-list')
+            }
             var tags_list = tags.reduce(function(list,tag){
                 var str = "<li class='tag-item'>"+tag+"</li>";
                 return list.append($(str));
@@ -530,6 +540,9 @@
                 });
             });
             $element.append(tags_list)
+            setTimeout(function(){
+               $("html, body").animate({ scrollTop: $('#results-list').offset().top }, 500)
+            },100)
             results_list.append(nodes);
         });
     }

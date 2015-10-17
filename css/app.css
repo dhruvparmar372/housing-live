@@ -194,6 +194,17 @@ html,body {
     width: 100%;
     overflow: hidden;
 }
+
+#empty-result-container{
+ display: none;
+}
+
+.empty-list #results-list{
+    display: none;
+}
+.empty-list #empty-result-container{
+    display: block;
+}
 .result{
     width: 32%;
     float: left;
