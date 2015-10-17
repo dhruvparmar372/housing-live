@@ -301,6 +301,7 @@
     var InputBox = function(options){
         var element = $(options.append_to),
             button = $("<button id='start-search-btn' class='app-btn'>Start Search</button>"),
+            close_button = $("<button id='close-search-btn' class='app-btn'>Stop</button>"),
             recognizer = new webkitSpeechRecognition(),
             cb = options.done_callback,
             self = this;
@@ -312,6 +313,15 @@
             element.addClass("loading");
             wave_container.removeClass('inactive');
             recognizer.start();
+        }
+
+        var stop_recording = function(){
+            if(self.listening){
+                self.listening = false;
+            }
+            element.removeClass("loading");
+            wave_container.addClass('inactive');
+            recognizer.stop();
         }
 
         var recognizer_result = function(event) {
@@ -332,7 +342,9 @@
         recognizer.lang = options.language || "en";
         recognizer.onresult = recognizer_result;
         button.bind('click',start_recording);
+        close_button.bind('click',stop_recording);
         element.append(button);
+        element.append(close_button);
     }
 
     //RESULTS LIST 

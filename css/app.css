@@ -101,12 +101,18 @@ html,body {
     margin    : 40px auto;
 }
 
-
-
-
-
-
-#search-box.loading .app-btn { display: none; }
+#start-search-btn{
+    display: block;
+}
+#close-search-btn{
+    display: none;
+}
+#search-box.loading #start-search-btn{
+    display: none;
+}
+#search-box.loading #close-search-btn{
+        display: block;
+}
 
 .app-btn {
     border         : none;
