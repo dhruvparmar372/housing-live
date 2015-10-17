@@ -265,6 +265,26 @@ html,body {
     transition       : all 0.3s ease-in-out;
     transform        : translate3d(0,35%,0);
 }
+
+.result::after{
+    content       : '';
+    position      : absolute;
+    bottom        : 27px;
+    right         : 5%;
+    padding       : 5px 10px;
+    border        : 1px solid #2ecc71;
+    border-radius : 2px;
+    color         : #2ecc71;
+}
+.result[service="rent"]::after{
+     content       : 'Rent';
+}
+.result[service="buy"]::after{
+     content       : 'Buy';
+}
+.result[service="pg"]::after{
+     content       : 'PG';
+}
 .result.show{
     transform: translate3d(0,0,0);
     opacity: 1;
@@ -330,6 +350,7 @@ body.top-search-bar #tags-list{
     transform: translateY(-20%);
     opacity:1;
 }
+
 .search-float{
     float            : right;
     background-color : #34495e;
