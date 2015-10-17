@@ -1870,4 +1870,5 @@ city_location["hyderabad"] = [
 
 window.location_cities = location_cities;
 window.city_location = city_location;
+window.cities = cities;
 })()
