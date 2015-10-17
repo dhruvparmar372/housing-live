@@ -17,25 +17,34 @@
         ];
     }
     
+    function get_articles(){
+        return [" of "," a "," an "," the "," I ", ' in ', ' near '];
+    }
+
     function get_filter_keywords(){
         var arr = []
         var extra_apartment_types = ["apartment", "flat", "home", "house", 'kitchen', 'halls', 'hall', 'halls', 'bath', 'bathroom','bathroom', 'area', "property","duplex", "triplex"];
-        var artilces = ["of","a","an","the","I"]
         var random_words = ["search", "find", "give", "need","want","look","up","provide","result","bring","face"]
-        return arr.concat(extra_apartment_types, artilces, random_words);
+        return arr.concat(extra_apartment_types, random_words);
     }
 
     function get_post_filter_keywords(){
-         var post_elements = ['Bedroom', 'Room']
-         return post_elements;
+         return ['Bedroom', 'Room']
     }
 
     function get_apartment_type(text){
+        var post_elements;
         var extra_elements_apartments = get_filter_keywords();
         var apartment_type_id = get_apartment_type_mapping();
         extra_elements_apartments.forEach(function(val){
             text = text.replace(val, '')
         })
+
+        var artilces = get_articles()
+        artilces.forEach(function(val){
+            text = text.replace(val, '')
+        })
+
         var exp_text = text;
         var apt_type
         exp_text = exp_text.toLowerCase()
@@ -54,6 +63,22 @@
             i++;
         }
 
+        exp_text = exp_text.toLowerCase().replace(/ /, '')
+        i = 0;
+        while(i < apartment_type_id.length){
+            j = 0;
+            while(j < apartment_type_id[i].length){
+                apt_type = apartment_type_id[i][j].toLowerCase().replace(/ /, '');
+                if (exp_text.indexOf(apt_type) > -1){
+                    text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
+                    text = text.replace(' s ', '');
+                    return {id: i+1, updated_text: text};
+                }
+                j++;
+            }
+            i++;
+        }
+        post_elements = get_post_filter_keywords()
         return{id: null, updated_text: text}
     }
 
@@ -88,22 +113,29 @@
     function analyse_elements(text){
         var apartment_element, budget_element;
         // Convert tokens to lowercase
+        var filters ={}
         var lowerText = text.toLowerCase();
         // Analyse service
         // Remove All is am are
         // Analyse BHK
         // Analyse Budget
         apartment_element = get_apartment_type(lowerText);
+        filters.apartment_type_id = apartment_element.id;
         budget_element = get_budget_range(apartment_element.updated_text);
+        filters.min_price = budget_element.min_budget;
+        filters.max_price = budget_element.max_budget;
         if(apartment_element.updated_text){
-            search_locality(apartment_element.updated_text, getLocalityResults);
+            search_locality(apartment_element.updated_text, getLocalityResults.bind(this, filters));
         }
+        console.log(filters);
         return apartment_element;
         // Analyse Locality
     }
 
-    function getLocalityResults(localityId){
+    function getLocalityResults(filters, localityId){
         console.log("Location id is "+localityId);
+        filters.poly = localityId;
+        console.log(filters);
     }
     
     
@@ -129,6 +161,7 @@
                 var result = event.results[event.results.length-1];
                 if(result.isFinal) {
                     if(typeof cb === "function"){
+                        console.log(result[0].transcript);
                         cb.call(this,result[0].transcript);
                     }
                     element.removeClass('loading');
