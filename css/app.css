@@ -179,9 +179,7 @@ html,body {
     line-height: 20px;
     color: #333;
     padding: 15px;
-    border-radius: 2px;
-    box-shadow       : 1px 1px 3px 0 rgba(0,0,0,.05);
-    background: white;    
+    border-radius: 2px;   
 }
 .help-line{
     font-weight: bold;
@@ -281,14 +279,17 @@ html,body {
 }
 
 .result::after{
-    content       : '';
-    position      : absolute;
-    bottom        : 27px;
-    right         : 5%;
-    padding       : 5px 10px;
-    border        : 1px solid #2ecc71;
-    border-radius : 2px;
-    color         : #2ecc71;
+    content         : '';
+    position        : absolute;
+    bottom          : 27px;
+    right           : 5%;
+    padding         : 1px 3px;
+    border          : 1px solid grey;
+    border-radius   : 2px;
+    color           : white;
+    background-color: grey;
+    font-size       : 14px;
+    font-weight     : lighter;
 }
 .result[service="rent"]::after{
      content       : 'Rent';
@@ -422,6 +423,12 @@ body.top-search-bar #top-header{
 
 
 @media only screen and (max-device-width: 375px) {
+    #tags-list{
+        display: none;
+    }
+    .search-float{
+        margin-right: 10px;
+    }
     #page-title{
         font-size: 46px;
     }
@@ -450,6 +457,12 @@ body.top-search-bar #top-header{
 }
 
 @media only screen and (min-device-width: 376px) and (max-device-width: 500px) {
+    #tags-list{
+        display: none;
+    }
+    .search-float{
+        margin-right: 10px;
+    }
     #help-text{
         padding: 10px;
     }
@@ -463,6 +476,9 @@ body.top-search-bar #top-header{
 }
 
 @media only screen and (min-device-width: 501px) and (max-device-width: 1000px){
+    .search-float{
+        margin-right: 10px;
+    }
     #help-text{
         padding: 10px;
     }
