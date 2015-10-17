@@ -279,17 +279,14 @@ html,body {
 }
 
 .result::after{
-    content         : '';
-    position        : absolute;
-    bottom          : 27px;
-    right           : 5%;
-    padding         : 1px 3px;
-    border          : 1px solid grey;
-    border-radius   : 2px;
-    color           : white;
-    background-color: grey;
-    font-size       : 14px;
-    font-weight     : lighter;
+    content       : '';
+    position      : absolute;
+    bottom        : 27px;
+    right         : 5%;
+    padding       : 5px 10px;
+    border        : 1px solid #2ecc71;
+    border-radius : 2px;
+    color         : #2ecc71;
 }
 .result[service="rent"]::after{
      content       : 'Rent';
