@@ -560,12 +560,15 @@
                 $("html, body").animate({ scrollTop: top }, 500)
             },100)
             results_list.append(nodes);
-            $('#results-list .result').each(function(i){
+            $('#results-list .result').slice(0,9).each(function(i){
                 setTimeout(function(){
                     $('#results-list .result').eq(i).addClass('show');
                 }, 150*(i+1))
                 
-            })            
+            })
+            setTimeout(function(){
+                $('#results-list .result').addClass('show');
+            },2100)
 
         });
     }
@@ -621,7 +624,7 @@
         
         setTimeout(function(){
             $('.dummy-line').addClass('addColor')
-        },2000)
+        },1500)
         
     }
     function bind_events(){
