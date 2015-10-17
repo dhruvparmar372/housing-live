@@ -6,6 +6,31 @@
     // var filter_tokens = ["Apartment","of","type","kind","size","specifications","area","rooms","home","house","for","a","an","apartment","flight","flat","property","duplex","search","find","me","get","query","Google","give","need","want","look","up","requirement","provide","result","the","bring","in","Indore","location","near","around","nearby","15","Powai","should","be","locationshould","I","am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","face","middle", "within", "between", "mid"];
     var price_keywords = ['lakhs', 'lakh', 'million', 'millions', 'crore', 'crores', 'thousand', 'thousands']
     var price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000']
+    
+
+
+    var TextAnalyser = function(query){
+        
+        var filter_object = {},
+            supported_services = ['rent','buy','pg'];
+
+        function analyse_service(){
+            query.indexOf()
+        }
+
+
+        analyse_service(query);
+        analyse_apartment_type(query);
+        analyse_apartment_type(query);
+
+        this.get_final_filter = function(){
+
+        }
+    }
+
+
+
+
     function get_apartment_type_mapping(){
         return [
             ['1 RK', '1 Room', '1 Room'],
