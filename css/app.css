@@ -194,15 +194,21 @@ html,body {
 }
 .result{
     width            : 32%;
-    margin           : 0 1% 0 1%;
+    margin           : 0 1% 1% 0;
     background-color : white;
-    border-radius    : 2px;
+    border-radius    : 4px;
     border           : 1px solid #ccc;
-    height           : 365px;
+    overflow         : hidden;
+    min-height       : 400px;
 }
 .result:nth-child(3n) { margin-right: 0; }
 .result img{
-    width: 100%;
+    display  : block;
+    width    : 100%;
+}
+.result .image-container { position: relative; }
+.result .details-container {
+    padding: 2%;
 }
 
 
