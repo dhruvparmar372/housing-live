@@ -96,7 +96,7 @@
                 i++;
             }
             post_elements = get_post_filter_keywords()
-            return{id: [], updated_text: text, apartment_type_tag: []}
+            return{id: [], updated_text: text, apartment_type_tag: ""}
         }
 
         function get_filter_keywords(){
@@ -444,7 +444,6 @@
             sort_key         : "relevance",
             results_per_page : 30
         };
-
         var tags = [];
         if(options.apartment_type_tag)
             tags.push(options.apartment_type_tag);
