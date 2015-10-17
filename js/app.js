@@ -505,6 +505,15 @@
                     default :
                         url = url;
                 }
+                if(service === "pg" || service === "rent"){
+                    if(key === 'max_price' && filter_object['max_price']){
+                        url += "&max_rent=" + filter_object['max_price'];
+                    }
+                    if(key === 'min_price' && filter_object['min_price']){
+                        url += "&min_rent=" + filter_object['min_price'];
+                    }
+                }
+
             }
             return url;
         }
