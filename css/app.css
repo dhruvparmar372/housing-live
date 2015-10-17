@@ -323,6 +323,52 @@ body.top-search-bar #top-header{
     animation: anim-effect-tamara 0.5s ease-out forwards;
 }
 
+
+
+@media only screen and (max-device-width: 375px) {
+    #help-text{
+        padding: 10px;
+    }
+    #results-list{
+        margin: 10px;
+        overflow: hidden;
+    }
+    #results-list .result{
+        width: 100%;
+        margin-bottom: 12px;
+    }
+    #help-text{
+        margin: 35px auto;
+    }
+}
+
+@media only screen and (min-device-width: 376px) and (max-device-width: 500px) {
+    #help-text{
+        padding: 10px;
+    }
+    #results-list{
+        margin: 10px;
+        overflow: hidden;
+    }
+    #results-list .result{
+        width: 100%;
+    }
+}
+
+@media only screen and (min-device-width: 501px) and (max-device-width: 1000px){
+    #help-text{
+        padding: 10px;
+    }
+    #results-list{
+        margin: 10px;
+        overflow: hidden;
+    }
+    #results-list .result{
+        width: 48%;
+        margin: 0 1% 1% 1%;
+    }
+}
+
 @-webkit-keyframes anim-effect-tamara {
     0% {
         box-shadow: 0 0 0 3px rgba(111,148,182,0.3);
