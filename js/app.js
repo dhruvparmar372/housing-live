@@ -1,4 +1,4 @@
-(function(city_location,location_cities, cities){
+(function(city_location,location_cities, cities, states){
     'use strict';
 
     var body, results_list;
@@ -189,7 +189,8 @@
         }
         function search_locality(str,callback){
              var matched_str, 
-                 match_city;
+                 match_city,
+                 state_match;
              
              location_cities.forEach(function(state){
                  if(!match_city){
@@ -210,9 +211,32 @@
                  })
              }
 
+             state_match = states.filter(function(state){
+                var reg = new RegExp(state, "i");
+                return str.match(reg);
+             });
+
+             if(state_match && state_match[0]){
+                state_match = state_match[0]
+             }
+             else{
+                state_match = ""
+             }
+
              if(match_city && match_city[0]){
+                match_city = match_city[0]
+             }
+             else{
+                match_city = ""
+             }
+
+             if(match_city || state_match){
+                if(match_city && state_match){
+                    state_match = ", " + state_match
+                }
+                var query_string = encodeURIComponent(match_city + state_match);
                  $.ajax({
-                     url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + match_city[0],
+                     url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + query_string,
                      success: function(data){
                          console.log("housing api result is ");
                          console.log(data);
@@ -432,7 +456,7 @@
     }
 
     $(document).ready(initialize);
-})(city_location,location_cities, cities);
+})(city_location,location_cities, cities, states);
 
 
 
