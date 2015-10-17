@@ -118,29 +118,30 @@
         }
         function purify_budget(text){
            var purified_text = [];
-           text = text.split(' ');
-           var new_text = []
-           text.forEach(function(elem, index){
-               var price_index = price_keywords.indexOf(elem);
-               var usable_index = text.indexOf(elem);
-               var converted_value = 0;
-               var converted_value_key = 0;
-               if ((price_index != -1) && (usable_index > 0)){
-                   converted_value_key = text[usable_index-1];
-                   if (parseInt(converted_value_key)){
-                       converted_value = converted_value_key*price_value[price_index];
-                       new_text.push(converted_value);
-                   }
-                   else
-                   {
-                       new_text.push(elem);
-                   }
-               }
-               else {
-                   new_text.push(elem);
-               }
-           })
-           return new_text.join(' ');
+            text= text.split(' ');
+            var new_text = []
+            text.forEach(function(elem, index){
+                var price_index = price_keywords.indexOf(elem);
+                var usable_index = text.indexOf(elem);
+                var converted_value = 0;
+                var converted_value_key = 0;
+                if ((price_index != -1) && (usable_index > 0)){
+                    converted_value_key = text[usable_index-1];
+                    if (parseInt(converted_value_key)){
+                        converted_value = converted_value_key*price_value[price_index];
+                        text[index] += 'x'
+                        new_text.push(converted_value);
+                    }
+                    else
+                    {
+                        new_text.push(elem);
+                    }
+                }
+                else {
+                    new_text.push(elem);
+                }
+            })
+            query = new_text.join(' '); 
         }
         function get_budget_range(text){
             var budget_range_arr = text.split(' ').filter(function(elem){ if (parseInt(elem)) { return parseInt(elem);}});
@@ -148,26 +149,33 @@
             if (budget_range_arr.length){
                 var final_budget_arr = [];
                 final_budget_arr = budget_range_arr.filter(function(elem){if (elem > 3500){ return elem; }});
+                console.log(final_budget_arr);
                 if (final_budget_arr.length){
-                    final_budget_arr = final_budget_arr.sort()
+                    final_budget_arr = final_budget_arr.map(function(elem){return parseInt(elem);});
+                    final_budget_arr = final_budget_arr.sort(sortNumber);
+                    console.log(final_budget_arr);
                     return_obj.max_budget = null;
                     return_obj.min_budget = null;
                     if (final_budget_arr.length == 1){
                         return_obj.max_budget = final_budget_arr[0];
+                        console.log(return_obj.max_budget);
                     }
                     else if (final_budget_arr.length == 2){
                         return_obj.min_budget = final_budget_arr[0];
                         return_obj.max_budget = final_budget_arr[1];
+                        console.log(return_obj);
                     }
                     else{
                         return_obj.min_budget = final_budget_arr[0];
                         return_obj.max_budget = final_budget_arr[final_budget_arr.length-1];
+                        console.log(return_obj);
                     }
                     return return_obj
                 }
                 return {};
-            }
-            return {};
+        }
+        function sortNumber(a,b) {
+            return a - b;
         }
 
 
@@ -222,7 +230,6 @@
         function get_articles(){
             return [" of "," a "," an "," the "," I ", ' in ', ' near '];
         }
-
 
 
         analyse_service();
