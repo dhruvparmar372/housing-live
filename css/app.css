@@ -104,15 +104,24 @@ html,body {
 
 #main-content {
     max-width : 1170px;
-    margin    : 120px auto;
+    margin    : 90px auto;
 }
 
-
+#page-title{
+    font-size: 60px;
+    margin: 0 auto;
+    margin: 10px;
+    padding: 10px;    
+}
 #start-search-btn{
     display: block;
+    margin: 0 auto;
+    width:300px;
 }
 #close-search-btn{
     display: none;
+    margin: 0 auto;
+    width:300px;
 }
 #search-box.loading #start-search-btn{
     display: none;
@@ -169,7 +178,7 @@ html,body {
     color       : #333;
 }
 
-#wave-container { position: relative; }
+#wave-container { position: relative;margin:60px; }
 #wave-container .dummy-line {
     position           : absolute;
     top                : 50%;
@@ -266,7 +275,7 @@ html,body {
     text-align : left;
 }
 #tags-list{
-    background-color: #f2b632;
+    background-color: white;
     opacity:1;
     transition: all 0.5s ease-in-out;
 }
@@ -293,46 +302,14 @@ body.top-search-bar #tags-list{
     bottom:0;
     height: 50px;
     width: 100%;
-    background-color: #f2b632;
+    background-color: white;
     z-index:10;
     transform: translate3d(0,-100%,0);
-    transition: all 0.4s ease-in-out; 
+    transition: all 0.2s ease-in-out; 
 }
 body.top-search-bar #top-header{
     transform: translate3d(0,0,0);
 }
-
-#wave-container { position: relative; }
-#wave-container .dummy-line {
-    position           : absolute;
-    top                : 50%;
-    left               : 50%;
-    right              : 0;
-    bottom             : 0;
-    height             : 1px;
-    background         : #d9d9d9;
-    width              : 400px;
-    opacity            : 0;
-    -webkit-transform  : translate3d(-50%,-50%,0);
-    -moz-transform     : translate3d(-50%,-50%,0);
-    -o-transform       : translate3d(-50%,-50%,0);
-    transform          : translate3d(-50%,-50%,0);
-    -webkit-transition : opacity 0.2s ease-in-out;
-    -moz-transition    : opacity 0.2s ease-in-out;
-    -o-transition      : opacity 0.2s ease-in-out;
-    transition         : opacity 0.2s ease-in-out;
-}
-#wave-container.inactive .dummy-line { opacity: 1; }
-#wave-container canvas { 
-    opacity            : 1; 
-    -webkit-transition : opacity 0.2s ease-in-out;
-    -moz-transition    : opacity 0.2s ease-in-out;
-    -o-transition      : opacity 0.2s ease-in-out;
-    transition         : opacity 0.2s ease-in-out;
-}
-#wave-container.inactive canvas { opacity: 0; }
-
-#tags-list { display: none; }
 
 .app-btn.pulse::after {
     -webkit-animation: anim-effect-tamara 0.5s ease-out forwards;

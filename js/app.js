@@ -14,7 +14,7 @@
                                 filters : {}
                             },
             supported_services = ['rent','buy','pg','paying guest'],
-            filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid"],
+            filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid", "ready", "to","move"],
             price_keywords = ['lakhs', 'lakh', 'million', 'millions', 'crore', 'crores', 'thousand', 'thousands'],
             price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000'],
             query = query && query.toLowerCase();
@@ -311,7 +311,6 @@
                 return;
             self.listening = true;
             button = $("#start-search-btn");
-            debugger
             element.addClass("loading");
             button.addClass('pulse')
             setTimeout(function(){
@@ -589,16 +588,17 @@
         wave_form = new SiriWave9({
                         width     : wave_width,
                         height    : Math.floor(wave_width/3),
+                        color     : ['#f2b632','#b5b5b7','#677077','#252839'],
                         speed     : 1,
                         container : document.getElementById('wave-container'),
-                        autostart : true
+                        autostart : true,
+
                     });
 
 
     }
 
     function bind_events(){
-        debugger
         $(window).on('scroll', throttle(function (event) {
             scroll_events();
         }, 50));
@@ -606,20 +606,14 @@
 
     function scroll_events(){
         var yPos =  pageYOffset;
-        
-        console.log(yPos)
         if ((yPos > 75) && (currentSearchBar == 'center')){
             currentSearchBar = 'top';
-            $(body).addClass('top-search-bar')
-            // $('#tags-list').addClass('hide');
-            // $('#lazy-header').addClass('show');
+            $(body).addClass('top-search-bar');
         }
 
         if ((yPos < 75) && (currentSearchBar == 'top')){
             currentSearchBar = 'center';
-            $(body).removeClass('top-search-bar')
-            // $('#tags-list').removeClass('hide');
-            // $('#lazy-header').removeClass('show');
+            $(body).removeClass('top-search-bar');
         }
 
     }
