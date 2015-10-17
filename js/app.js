@@ -15,6 +15,19 @@
             , '4 Bedroom', '5 Bedroom', '6 Bedroom', '7 Bedroom']
         ];
     }
+
+    function get_service_names(text){
+        var services = ['buy', 'rent', 'pg'];
+        var i = 0
+        while(i < services.length){
+            if(text.indexOf(services[i]) > -1){
+                text = text.replace(services[i], '')
+                return {updated_text:text, service: services[i]}
+            }
+            i++;
+        }
+        return {updated_text:text, service: null}
+    }
     
     function get_articles(){
         return [" of "," a "," an "," the "," I ", ' in ', ' near '];
@@ -110,7 +123,7 @@
     }
 
     function analyse_elements(text){
-        var apartment_element, budget_element;
+        var apartment_element, budget_element, service_obj;
         // Convert tokens to lowercase
         var filters ={}
         var lowerText = text.toLowerCase();
@@ -118,7 +131,9 @@
         // Remove All is am are
         // Analyse BHK
         // Analyse Budget
-        apartment_element = get_apartment_type(lowerText);
+        service_obj = get_service_names(lowerText)
+        filters.service = service_obj.service
+        apartment_element = get_apartment_type(service_obj.updated_text);
         filters.apartment_type_id = apartment_element.id;
         budget_element = get_budget_range(apartment_element.updated_text);
         filters.min_price = budget_element.min_budget;
