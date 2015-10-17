@@ -19,10 +19,11 @@
             price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000'],
             query = query && query.toLowerCase();
         
+        query = " " + query + " "
         query = replaceAll(' to ', ' 2 ', query);
         query = replaceAll(' by ', ' buy ', query);
+        query = replaceAll(' bye ', ' buy ', query);
 
-        
         console.log('initial query ', query);
         //Service Analyser
         function analyse_service(){
@@ -190,7 +191,7 @@
             return a - b;
         }
         function replaceAll(find, replace, str) {
-          return str.replace(new RegExp(find, 'g'), replace);
+            return str.replace(new RegExp(find, 'g'), replace);
         }
 
 
@@ -357,6 +358,11 @@
 
     //RESULTS LIST 
     var ResultsList = function(options){
+        if(options.filters && options.filters.min_price > 100000){
+            if(options.services.length == 0){
+                options.services[0] = 'buy'
+            }
+        }
         var s_map = {
             'rent' : {
                 url : "https://rails.housing.com//api/v3/rent/filter?",
@@ -484,7 +490,9 @@
             for(var key in filters){
                 switch(key){
                     case 'apartment_type_id' :
-                        url = url+"apartment_type_id="+filter_object[key].join(",");
+                        if(filter_object[key] && filter_object[key].length){
+                            url = url+"apartment_type_id="+filter_object[key].join(",");
+                        }
                         break;
                     case 'sort_key':
                     case 'poly':
@@ -498,6 +506,15 @@
                     default :
                         url = url;
                 }
+                if(service === "pg" || service === "rent"){
+                    if(key === 'max_price' && filter_object['max_price']){
+                        url += "&max_rent=" + filter_object['max_price'];
+                    }
+                    if(key === 'min_price' && filter_object['min_price']){
+                        url += "&min_rent=" + filter_object['min_price'];
+                    }
+                }
+
             }
             return url;
         }
