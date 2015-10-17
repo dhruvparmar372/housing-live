@@ -97,7 +97,7 @@ html,body {
 
 #main-content {
     max-width : 1170px;
-    margin    : 120px auto;
+    margin    : 0 auto;
 }
 
 
@@ -108,21 +108,22 @@ html,body {
 #search-box.loading .app-btn { display: none; }
 
 .app-btn {
-    border             : none;
-    font-family        : inherit;
-    font-size          : inherit;
-    color              : inherit;
-    background         : none;
-    cursor             : pointer;
-    padding            : 25px 80px;
-    display            : inline-block;
-    margin             : 15px 30px;
-    letter-spacing     : 1px;
-    outline            : none;
-    position           : relative;
-    border-radius      : 40px;
-    color              : #aaa;
-    border             : 1px solid #aaa;
+    border         : none;
+    font-family    : inherit;
+    font-size      : inherit;
+    color          : inherit;
+    background     : none;
+    cursor         : pointer;
+    padding        : 25px 80px;
+    display        : inline-block;
+    margin         : 0 auto;
+    letter-spacing : 1px;
+    outline        : none;
+    position       : relative;
+    border-radius  : 40px;
+    color          : #aaa;
+    border         : 1px solid #aaa;
+    width          : 85%;
     -webkit-transition : all 0.15s ease-in-out;
     -o-transition      : all 0.15s ease-in-out;
     -moz-transition    : all 0.15s ease-in-out;
@@ -131,10 +132,11 @@ html,body {
 .app-btn:hover { background: #f5f5f5; }
 
 #help-text {
-    width       : 400px;
+    max-width   : 400px;
     margin      : 80px auto;
     font-size   : 14px;
     line-height : 20px;
+    color       : #333;
 }
 
 #wave-container { position: relative; }
@@ -146,7 +148,8 @@ html,body {
     bottom             : 0;
     height             : 1px;
     background         : #d9d9d9;
-    width              : 400px;
+    max-width          : 400px;
+    width              : 85%;
     opacity            : 0;
     -webkit-transform  : translate3d(-50%,-50%,0);
     -moz-transform     : translate3d(-50%,-50%,0);
@@ -165,7 +168,17 @@ html,body {
     -o-transition      : opacity 0.2s ease-in-out;
     transition         : opacity 0.2s ease-in-out;
 }
-#wave-container.inactive canvas { opacity: 0; }
+
+#wave-container .listening-text {
+    position   : absolute;
+    left       : 0;
+    right      : 0;
+    top        : -40px;
+    text-align : center;
+    color      : #333;
+}
+
+#wave-container.inactive canvas, #wave-container.inactive .listening-text { opacity: 0; }
 
 #tags-list { display: none; }
 

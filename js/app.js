@@ -537,9 +537,8 @@
         
         var wave_width = Math.min($(window).innerWidth()*0.8,600),
             wave_container = $('#wave-container').addClass('inactive');
-        
         wave_form = new SiriWave9({
-                        width     : 600,
+                        width     : wave_width,
                         height    : Math.floor(wave_width/3),
                         speed     : 1,
                         container : document.getElementById('wave-container'),
