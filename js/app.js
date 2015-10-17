@@ -101,20 +101,29 @@
         if (budget_range_arr.length){
             var final_budget_arr = [];
             final_budget_arr = budget_range_arr.filter(function(elem){if (elem > 3500){ return elem; }});
+            console.log(final_budget_arr);
             if (final_budget_arr.length){
-                final_budget_arr = final_budget_arr.sort()
+                final_budget_arr = final_budget_arr.map(function(elem){return parseInt(elem);});
+                final_budget_arr = final_budget_arr.sort(sortNumber);
+                console.log(final_budget_arr);
                 return_obj.max_budget = null;
                 return_obj.min_budget = null;
                 if (final_budget_arr.length == 1){
+                    console.log('1 wale me hai');
                     return_obj.max_budget = final_budget_arr[0];
+                    console.log(return_obj.max_budget);
                 }
                 else if (final_budget_arr.length == 2){
+                    console.log('2 wale me hai');
                     return_obj.min_budget = final_budget_arr[0];
                     return_obj.max_budget = final_budget_arr[1];
+                    console.log(return_obj);
                 }
                 else{
+                    console.log('all wale me hai');
                     return_obj.min_budget = final_budget_arr[0];
                     return_obj.max_budget = final_budget_arr[final_budget_arr.length-1];
+                    console.log(return_obj);
                 }
                 return return_obj
             }
@@ -123,6 +132,9 @@
         return {};
     }
 
+    function sortNumber(a,b) {
+        return a - b;
+    }
     function purify_budget(text){
         var purified_text = [];
         text= text.split(' ');
@@ -136,6 +148,7 @@
                 converted_value_key = text[usable_index-1];
                 if (parseInt(converted_value_key)){
                     converted_value = converted_value_key*price_value[price_index];
+                    text[index] += 'x'
                     new_text.push(converted_value);
                 }
                 else
@@ -155,6 +168,7 @@
         var filters ={}
         var lowerText = text.toLowerCase();
         var purified_text = '';
+        lowerText = replaceAll(' to ', ' 2 ', lowerText);
         // Analyse service
         // Remove All is am are
         // Analyse BHK
@@ -164,7 +178,7 @@
         apartment_element = get_apartment_type(service_obj.updated_text);
         filters.apartment_type_id = apartment_element.id;
         
-        purified_text = apartment_element.updated_text.replace('-', ' ');
+        purified_text = replaceAll('-', ' ',apartment_element.updated_text);
         purified_text = purify_budget(apartment_element.updated_text);
         budget_element = get_budget_range(purified_text);
         filters.min_price = budget_element.min_budget;
@@ -177,6 +191,9 @@
         // Analyse Locality
     }
 
+    function replaceAll(find, replace, str) {
+      return str.replace(new RegExp(find, 'g'), replace);
+    }
     function getLocalityResults(filters, localityId){
         console.log("Location id is "+localityId);
         filters.poly = localityId;
