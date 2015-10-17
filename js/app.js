@@ -628,6 +628,9 @@
         setTimeout(function(){
             $('.dummy-line').addClass('addColor')
         },1500)
+        setTimeout(function(){
+            $('#powered-by-housing').addClass('move')
+        },2500)
         
     }
     function bind_events(){
