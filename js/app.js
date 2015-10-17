@@ -13,7 +13,7 @@
                                 services : [],
                                 filters : {}
                             },
-            supported_services = ['rent','buy','pg'],
+            supported_services = ['rent','buy','pg','paying guest'],
             filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid"],
             price_keywords = ['lakhs', 'lakh', 'million', 'millions', 'crore', 'crores', 'thousand', 'thousands'],
             price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000'],
@@ -33,6 +33,14 @@
                     query = query.replace(service, '');
                     filter_object.services.push(service);
                 }
+            }
+            i = 0;
+            while(i < filter_object.services.length){
+                if(filter_object.services[i] === 'paying guest') {
+                    filter_object.services.splice(i,1);
+                    filter_object.services.push('pg');
+                }
+                i++;
             }
         }
 
@@ -339,8 +347,7 @@
                 },
                 base_filters : { details : true },
                 get_rendered_item : function(result){
-                    var tag = result.type == 'project' ? '_m' : 'medium';
-                    var image = result.thumb_url_new ? result.thumb_url_new.replace('version', tag) : ''
+                    var image = result.thumb_url_new ? result.thumb_url_new.replace('version', 'medium') : ''
                     var temp_str = "<div class='result' service='rent' data-id="+ result.id +">" +
                                         "<div class='image-container'>" +
                                             "<img src='" + image + "'/>" +
@@ -360,7 +367,8 @@
                     return search_result.hits;
                 },
                 get_rendered_item : function(result){
-                    var image = result.thumb_image_url ? result.thumb_image_url.replace('version', 'medium') : ''
+                    var tag = result.type == 'project' ? '_m' : 'medium';
+                    var image = result.thumb_image_url ? result.thumb_image_url.replace('version', tag) : ''
                     var temp_str = "<div class='result' service='buy' data-id="+ result.id +">" +
                                         "<div class='image-container'>" +
                                             "<img src='" + image + "'/>" +
@@ -376,8 +384,11 @@
             },
             'pg' : {
                 url : "https://pg.housing.com/api/v3/pg//filter?",
+                base_filters : { details : true },
                 transform_results : function(search_result){
-                    return search_result.hits;
+                    return search_result.hits.hits.map(function(hit){
+                        return hit._source;
+                    });
                 },
                 get_rendered_item : function(result){
                     var image = result.thumb_url ? result.thumb_url.replace('version', 'medium') : ''
@@ -396,7 +407,7 @@
             }
         }
 
-
+        debugger;
         //Default Options
         var defaults = {
             services : ['buy','rent']
@@ -411,7 +422,7 @@
             tags.push(options.apartment_type_tag);
         
         
-        var options     = $.extend(options,defaults),
+        var options     = $.extend(defaults,options),
             filter_tags = [],
             $element    = $(options.append_to);
         
@@ -499,15 +510,19 @@
                 var str = "<li class='tag-item'>"+tag+"</li>";
                 return list.append($(str));
             },$("<ul class='tags-list'></ul>"));
-            var rendered = service_results.map(function(s_result){
+            
+            results_list.empty();
+            var nodes = [];
+            service_results.forEach(function(s_result){
                 var results = s_result.results,
                     service_obj = s_map[s_result.service];
 
-                return results.reduce(function(list,result){
-                    return list.append(service_obj.get_rendered_item(result));
-                },$("<div class='result-list'></div>"));
+                results.forEach(function(result){
+                    nodes.push(service_obj.get_rendered_item(result));
+                });
             });
-            $element.append(tags_list).append(rendered);
+            $element.append(tags_list)
+            results_list.append(nodes);
         });
     }
 
@@ -515,7 +530,7 @@
 
     
     function analysis_done(filter_object){
-        var results_list = new ResultsList($.extend(filter_object,{append_to:"#results-list"}));
+        var filter_results_list = new ResultsList($.extend(filter_object,{append_to:"#results-list"}));
         wave_container.addClass('inactive');
     }
 

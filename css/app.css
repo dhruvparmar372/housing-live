@@ -98,7 +98,7 @@ html,body {
 
 #main-content {
     max-width : 1170px;
-    margin    : 0 auto;
+    margin    : 40px auto;
 }
 
 
@@ -125,6 +125,7 @@ html,body {
     color          : #aaa;
     border         : 1px solid #aaa;
     width          : 85%;
+    max-width      : 400px;
     -webkit-transition : all 0.15s ease-in-out;
     -o-transition      : all 0.15s ease-in-out;
     -moz-transition    : all 0.15s ease-in-out;
