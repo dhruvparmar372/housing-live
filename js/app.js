@@ -366,16 +366,17 @@
                 base_filters : { details : true },
                 get_rendered_item : function(result){
                     var image = result.thumb_url_new ? result.thumb_url_new.replace('version', 'medium') : ''
-                    var temp_str = "<div class='result pull-left' service='rent' data-id="+ result.id +">" +
-                                        "<div class='image-container'>" +
-                                            "<img src='" + image + "'/>" +
-                                        "</div>" +
+                    var bg_url = "background-image: url("+image+");";
+                    var h_url = result.canonical_url;
+                    var temp_str = "<a class='result pull-left' target='_blank' service='rent' data-id="+ result.id +" href="+h_url+">" +
+                                        "<div class='image-wrapper'><div class='image-container' style='"+bg_url+"'>" +
+                                        "</div></div>" +
                                         "<div class='details-container'>" +
-                                            "<div class='apartment-type'>" + result.seo_title +"</div>" +
+                                            "<div class='apartment-type ellipsis'>" + result.seo_title +"</div>" +
                                             "<div class='locality'>" + result.street_info +"</div>" +
-                                            "<div class='price'>" + result.formatted_rent + "</div>" +
-                                        "<div>" +
-                                    "</div>";
+                                            "<div class='price'> &#8377; " + result.formatted_rent + "</div>" +
+                                        "</div>" +
+                                    "</a>";
                     return $(temp_str);
                 }
             },
@@ -386,17 +387,18 @@
                 },
                 get_rendered_item : function(result){
                     var tag = result.type == 'project' ? '_m' : 'medium';
-                    var image = result.thumb_image_url ? result.thumb_image_url.replace('version', tag) : ''
-                    var temp_str = "<div class='result pull-left' service='buy' data-id="+ result.id +">" +
-                                        "<div class='image-container'>" +
-                                            "<img src='" + image + "'/>" +
-                                        "</div>" +
+                    var h_url = "https://housing.com"+result.inventory_canonical_url;
+                    var image = result.thumb_image_url ? result.thumb_image_url.replace('version', tag) : '';
+                    var bg_url = "background-image: url("+image+");"
+                    var temp_str = "<a class='result pull-left' target='_blank' service='buy' data-id="+ result.id+" href="+h_url +">" +
+                                        "<div class='image-wrapper'><div class='image-container' style='"+bg_url+"'>" +
+                                        "</div></div>" +
                                         "<div class='details-container'>" +
-                                            "<div class='apartment-type'>" + result.title +"</div>" +
+                                            "<div class='apartment-type ellipsis'>" + result.title +"</div>" +
                                             "<div class='locality'>" + result.street_info +"</div>" +
-                                            "<div class='price'>" + result.formatted_price + "</div>" +
-                                        "<div>" +
-                                    "</div>";
+                                            "<div class='price'> &#8377; " + result.formatted_price + "</div>" +
+                                        "</div>" +
+                                    "</a>";
                     return $(temp_str);
                 }
             },
@@ -409,17 +411,18 @@
                     });
                 },
                 get_rendered_item : function(result){
-                    var image = result.thumb_url ? result.thumb_url.replace('version', 'medium') : ''
-                    var temp_str = "<div class='result pull-left' service='pg' data-id="+ result.id +">" +
-                                        "<div class='image-container'>" +
-                                            "<img src='" + image + "'/>" +
-                                        "</div>" +
+                    var image = result.thumb_url ? result.thumb_url.replace('thumb', 'medium').replace('version', 'medium') : '';
+                    var bg_url = "background-image: url("+image+");"
+                    var h_url = result.canonical_url;
+                    var temp_str = "<a class='result pull-left' target='_blank' service='pg' data-id="+ result.id+" href='"+h_url +"'>" +
+                                        "<div class='image-wrapper'><div class='image-container' style='"+bg_url+"'>" +
+                                        "</div></div>" +
                                         "<div class='details-container'>" +
-                                            "<div class='apartment-type'>" + result.apartment_type +"</div>" +
+                                            "<div class='apartment-type ellipsis'>" + result.apartment_type +"</div>" +
                                             "<div class='locality'>" + result.street_info +"</div>" +
-                                            "<div class='price'>" + result.formatted_min_rent + "</div>" +
-                                        "<div>" +
-                                    "</div>";
+                                            "<div class='price'> &#8377; " + result.formatted_min_rent + "</div>" +
+                                        "</div>" +
+                                    "</a>";
                     return $(temp_str);
                 }
             }
