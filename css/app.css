@@ -188,24 +188,19 @@ html,body {
 
 #wave-container.inactive canvas, #wave-container.inactive .listening-text { opacity: 0; }
 
-#tags-list { display: none; }
-
 .result-list{
-    width: 100%;
-    overflow: hidden;
+    width    : 100%;
+    overflow : hidden;
 }
 .result{
-    width: 32%;
-    float: left;
-    margin-left: 1%;
-    padding: 3px;
-    box-sizing: border-box;
-    background-color: white;
-    border-radius: 2px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    margin-bottom: 5px;
-    height: 365px;
+    width            : 32%;
+    margin           : 0 1% 0 1%;
+    background-color : white;
+    border-radius    : 2px;
+    border           : 1px solid #ccc;
+    height           : 365px;
 }
+.result:nth-child(3n) { margin-right: 0; }
 .result img{
     width: 100%;
 }

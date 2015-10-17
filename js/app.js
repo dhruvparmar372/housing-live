@@ -360,7 +360,7 @@
                 base_filters : { details : true },
                 get_rendered_item : function(result){
                     var image = result.thumb_url_new ? result.thumb_url_new.replace('version', 'medium') : ''
-                    var temp_str = "<div class='result' service='rent' data-id="+ result.id +">" +
+                    var temp_str = "<div class='result pull-left' service='rent' data-id="+ result.id +">" +
                                         "<div class='image-container'>" +
                                             "<img src='" + image + "'/>" +
                                         "</div>" +
@@ -381,7 +381,7 @@
                 get_rendered_item : function(result){
                     var tag = result.type == 'project' ? '_m' : 'medium';
                     var image = result.thumb_image_url ? result.thumb_image_url.replace('version', tag) : ''
-                    var temp_str = "<div class='result' service='buy' data-id="+ result.id +">" +
+                    var temp_str = "<div class='result pull-left' service='buy' data-id="+ result.id +">" +
                                         "<div class='image-container'>" +
                                             "<img src='" + image + "'/>" +
                                         "</div>" +
@@ -404,7 +404,7 @@
                 },
                 get_rendered_item : function(result){
                     var image = result.thumb_url ? result.thumb_url.replace('version', 'medium') : ''
-                    var temp_str = "<div class='result' service='pg' data-id="+ result.id +">" +
+                    var temp_str = "<div class='result pull-left' service='pg' data-id="+ result.id +">" +
                                         "<div class='image-container'>" +
                                             "<img src='" + image + "'/>" +
                                         "</div>" +
@@ -514,10 +514,13 @@
             });
         })).then(function(service_results){
             
-            var tags_list = tags.reduce(function(list,tag){
+            tags_list.empty();
+            var tag_nodes = [];
+            tags.forEach(function(tag){
                 var str = "<li class='tag-item'>"+tag+"</li>";
-                return list.append($(str));
-            },$("<ul class='tags-list'></ul>"));
+                tag_nodes.push($(str));
+            });
+            tags_list.append(tag_nodes);
             
             results_list.empty();
             var nodes = [];
@@ -529,7 +532,6 @@
                     nodes.push(service_obj.get_rendered_item(result));
                 });
             });
-            $element.append(tags_list)
             results_list.append(nodes);
         });
     }
@@ -547,8 +549,9 @@
     }
     
     function cache_nodes(){
-        body = $('body');
-        results_list = $("#results-list");
+        body           = $('body');
+        results_list   = $("#results-list");
+        tags_list      = $("#tags-list");
         wave_container = $("#wave-container");
     }
 
