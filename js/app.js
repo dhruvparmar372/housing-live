@@ -462,6 +462,10 @@
         }
         if(price_tag)
             tags.push(price_tag);
+
+        if(options.services){
+            tags = tags.concat(options.services);
+        }
      
         //build filter url
         var build_url = function(filter_object,service){
@@ -535,8 +539,10 @@
             tags_list.empty();
             var tag_nodes = [];
             tags.forEach(function(tag){
-                var str = "<li class='tag-item'>"+tag+"</li>";
-                tag_nodes.push($(str));
+                if(tag){
+                    var str = "<li class='tag-item'>"+tag+"</li>";
+                    tag_nodes.push($(str));    
+                }
             });
             tags_list.append(tag_nodes);
             results_list.empty();
