@@ -311,7 +311,6 @@
                 return;
             self.listening = true;
             button = $("#start-search-btn");
-            debugger
             element.addClass("loading");
             button.addClass('pulse')
             setTimeout(function(){
