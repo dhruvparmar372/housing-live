@@ -1,212 +1,245 @@
-(function(){
+(function(city_location,location_cities){
     'use strict';
 
-    var body, results_list;
-    var filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid"];
-    // var filter_tokens = ["Apartment","of","type","kind","size","specifications","area","rooms","home","house","for","a","an","apartment","flight","flat","property","duplex","search","find","me","get","query","Google","give","need","want","look","up","requirement","provide","result","the","bring","in","Indore","location","near","around","nearby","15","Powai","should","be","locationshould","I","am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","face","middle", "within", "between", "mid"];
-    var price_keywords = ['lakhs', 'lakh', 'million', 'millions', 'crore', 'crores', 'thousand', 'thousands']
-    var price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000']
-    
+    var body, results_list,
+        city_location = city_location,
+        location_cities = location_cities;
 
 
-    var TextAnalyser = function(query){
+
+    var TextAnalyser = function(query,done_callback){
         
-        var filter_object = {},
-            supported_services = ['rent','buy','pg'];
+        var filter_object = {
+                                services : [],
+                                filters : {}
+                            },
+            supported_services = ['rent','buy','pg'],
+            filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid"],
+            price_keywords = ['lakhs', 'lakh', 'million', 'millions', 'crore', 'crores', 'thousand', 'thousands'],
+            price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000'],
+            query = query.toLowerCase();
 
+        
+        console.log('initial query ', query);
+        //Service Analyser
         function analyse_service(){
-            query.indexOf()
-        }
-
-
-        analyse_service(query);
-        analyse_apartment_type(query);
-        analyse_apartment_type(query);
-
-        this.get_final_filter = function(){
-
-        }
-    }
-
-
-
-
-    function get_apartment_type_mapping(){
-        return [
-            ['1 RK', '1 Room', '1 Room'],
-            ['1 BHK', '1 Bedroom', '1 Bedroom', '1 Bedroom', '2 Rooms', '1 Bedroom'],
-            ['1.5 BHK', '2 BHK', '2 RK', '2 BH','3 R', '3 RK', '2 Bedroom', '2 Bedrooms', '2 Rooms', '2 Room'],
-            ['2.5 BHK', '2.5 BH', '3 BHK', '3 RK', '3 Room', '3 Bedroom', '2.5 Bedroom', '3 Room','3 Rooms', '3 R'],
-            ['4 BHK', '5 BHK', '6 BHK', '4 Bedroom', '5 Bedroom', '6 Bedroom', '7 Bedroom', '4 BH', '5 BH', '6 BH'
-            , '4 Bedroom', '5 Bedroom', '6 Bedroom', '7 Bedroom']
-        ];
-    }
-
-    function get_service_names(text){
-        var services = ['buy', 'rent', 'pg'];
-        var i = 0
-        while(i < services.length){
-            if(text.indexOf(services[i]) > -1){
-                text = text.replace(services[i], '')
-                return {updated_text:text, service: services[i]}
+            var i = 0
+            while(i < supported_services.length){
+                var service = supported_services[i++];
+                if(query.indexOf(service) > -1){
+                    query = query.replace(service, '');
+                    filter_object.services.push(service);
+                }
             }
-            i++;
         }
-        return {updated_text:text, service: null}
-    }
-    
-    function get_articles(){
-        return [" of "," a "," an "," the "," I ", ' in ', ' near '];
-    }
 
-    function get_filter_keywords(){
-        var arr = []
-        var extra_apartment_types = ["apartment", "flat", "home", "house", 'kitchen', 'halls', 'hall', 'halls', 'bath', 'bathroom','bathroom', 'area', "property","duplex", "triplex"];
-        var random_words = ["search", "find", "give", "need","want","look","up","provide","result","bring","face"]
-        return arr.concat(extra_apartment_types, random_words);
-    }
 
-    function get_post_filter_keywords(){
-         return ['Bedroom', 'Room']
-    }
+       
+        //Apartment Type Analyser Methods
+        function analyse_apartment_type(text){
+            var post_elements;
+            var extra_elements_apartments = get_filter_keywords();
+            var apartment_type_id = get_apartment_type_mapping();
+            extra_elements_apartments.forEach(function(val){
+                text = text.replace(val, '')
+            })
 
-    function get_apartment_type(text){
-        var post_elements;
-        var extra_elements_apartments = get_filter_keywords();
-        var apartment_type_id = get_apartment_type_mapping();
-        extra_elements_apartments.forEach(function(val){
-            text = text.replace(val, '')
-        })
+            var artilces = get_articles()
+            artilces.forEach(function(val){
+                text = text.replace(val, '')
+            })
 
-        var artilces = get_articles()
-        artilces.forEach(function(val){
-            text = text.replace(val, '')
-        })
-
-        var exp_text = text;
-        var apt_type
-        exp_text = exp_text.toLowerCase()
-        var i = 0;
-        while(i < apartment_type_id.length){
-            var j = 0;
-            while(j < apartment_type_id[i].length){
-                apt_type = apartment_type_id[i][j].toLowerCase()
-                if (exp_text.indexOf(apt_type) > -1){
-                    text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
-                    text = text.replace(' s ', '');
-                    return {id: i+1, updated_text: text};
+            var exp_text = text;
+            var apt_type
+            exp_text = exp_text.toLowerCase()
+            var i = 0;
+            while(i < apartment_type_id.length){
+                var j = 0;
+                while(j < apartment_type_id[i].length){
+                    apt_type = apartment_type_id[i][j].toLowerCase()
+                    if (exp_text.indexOf(apt_type) > -1){
+                        text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
+                        text = text.replace(' s ', '');
+                        return {id: [i+1], updated_text: text};
+                    }
+                    j++;
                 }
-                j++;
+                i++;
             }
-            i++;
-        }
 
-        exp_text = exp_text.toLowerCase().replace(/ /, '')
-        i = 0;
-        while(i < apartment_type_id.length){
-            j = 0;
-            while(j < apartment_type_id[i].length){
-                apt_type = apartment_type_id[i][j].toLowerCase().replace(/ /, '');
-                if (exp_text.indexOf(apt_type) > -1){
-                    text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
-                    text = text.replace(' s ', '');
-                    return {id: i+1, updated_text: text};
+            exp_text = exp_text.toLowerCase().replace(/ /, '')
+            i = 0;
+            while(i < apartment_type_id.length){
+                j = 0;
+                while(j < apartment_type_id[i].length){
+                    apt_type = apartment_type_id[i][j].toLowerCase().replace(/ /, '');
+                    if (exp_text.indexOf(apt_type) > -1){
+                        text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
+                        text = text.replace(' s ', '');
+                        return {id: [i+1], updated_text: text};
+                    }
+                    j++;
                 }
-                j++;
+                i++;
             }
-            i++;
+            post_elements = get_post_filter_keywords()
+            return{id: [], updated_text: text}
         }
-        post_elements = get_post_filter_keywords()
-        return{id: null, updated_text: text}
-    }
 
-    function get_budget_range(text){
-        var budget_range_arr = text.split(' ').filter(function(elem){ if (parseInt(elem)) { return parseInt(elem);}});
-        var return_obj = {};
-        if (budget_range_arr.length){
-            var final_budget_arr = [];
-            final_budget_arr = budget_range_arr.filter(function(elem){if (elem > 3500){ return elem; }});
-            if (final_budget_arr.length){
-                final_budget_arr = final_budget_arr.sort()
-                return_obj.max_budget = null;
-                return_obj.min_budget = null;
-                if (final_budget_arr.length == 1){
-                    return_obj.max_budget = final_budget_arr[0];
+        function get_filter_keywords(){
+            var arr = []
+            var extra_apartment_types = ["apartment", "flat", "home", "house", 'kitchen', 'halls', 'hall', 'halls', 'bath', 'bathroom','bathroom', 'area', "property","duplex", "triplex"];
+            var random_words = ["search", "find", "give", "need","want","look","up","provide","result","bring","face"]
+            return arr.concat(extra_apartment_types, random_words);
+        }
+        function get_apartment_type_mapping(){
+            return [
+                ['1 RK', '1 Room', '1 Room'],
+                ['1 BHK', '1 Bedroom', '1 Bedroom', '1 Bedroom', '2 Rooms', '1 Bedroom'],
+                ['1.5 BHK', '2 BHK', '2 RK', '2 BH','3 R', '3 RK', '2 Bedroom', '2 Bedrooms', '2 Rooms', '2 Room'],
+                ['2.5 BHK', '2.5 BH', '3 BHK', '3 RK', '3 Room', '3 Bedroom', '2.5 Bedroom', '3 Room','3 Rooms', '3 R'],
+                ['4 BHK', '5 BHK', '6 BHK', '4 Bedroom', '5 Bedroom', '6 Bedroom', '7 Bedroom', '4 BH', '5 BH', '6 BH'
+                , '4 Bedroom', '5 Bedroom', '6 Bedroom', '7 Bedroom']
+            ];
+        }
+        function get_post_filter_keywords(){
+             return ['Bedroom', 'Room']
+        }
+
+
+
+
+        //Budget Analyser Methods
+        function analyse_budget(){
+            query = purify_budget(query.replace('-', ' '));
+            var budget_element = get_budget_range(query);
+            filter_object.filters.min_price = budget_element.min_budget;
+            filter_object.filters.max_price = budget_element.max_budget;
+        }
+        function purify_budget(text){
+           var purified_text = [];
+           text = text.split(' ');
+           var new_text = []
+           text.forEach(function(elem, index){
+               var price_index = price_keywords.indexOf(elem);
+               var usable_index = text.indexOf(elem);
+               var converted_value = 0;
+               var converted_value_key = 0;
+               if ((price_index != -1) && (usable_index > 0)){
+                   converted_value_key = text[usable_index-1];
+                   if (parseInt(converted_value_key)){
+                       converted_value = converted_value_key*price_value[price_index];
+                       new_text.push(converted_value);
+                   }
+                   else
+                   {
+                       new_text.push(elem);
+                   }
+               }
+               else {
+                   new_text.push(elem);
+               }
+           })
+           return new_text.join(' ');
+        }
+        function get_budget_range(text){
+            var budget_range_arr = text.split(' ').filter(function(elem){ if (parseInt(elem)) { return parseInt(elem);}});
+            var return_obj = {};
+            if (budget_range_arr.length){
+                var final_budget_arr = [];
+                final_budget_arr = budget_range_arr.filter(function(elem){if (elem > 3500){ return elem; }});
+                if (final_budget_arr.length){
+                    final_budget_arr = final_budget_arr.sort()
+                    return_obj.max_budget = null;
+                    return_obj.min_budget = null;
+                    if (final_budget_arr.length == 1){
+                        return_obj.max_budget = final_budget_arr[0];
+                    }
+                    else if (final_budget_arr.length == 2){
+                        return_obj.min_budget = final_budget_arr[0];
+                        return_obj.max_budget = final_budget_arr[1];
+                    }
+                    else{
+                        return_obj.min_budget = final_budget_arr[0];
+                        return_obj.max_budget = final_budget_arr[final_budget_arr.length-1];
+                    }
+                    return return_obj
                 }
-                else if (final_budget_arr.length == 2){
-                    return_obj.min_budget = final_budget_arr[0];
-                    return_obj.max_budget = final_budget_arr[1];
-                }
-                else{
-                    return_obj.min_budget = final_budget_arr[0];
-                    return_obj.max_budget = final_budget_arr[final_budget_arr.length-1];
-                }
-                return return_obj
+                return {};
             }
             return {};
         }
-        return {};
-    }
 
-    function purify_budget(text){
-        var purified_text = [];
-        text= text.split(' ');
-        var new_text = []
-        text.forEach(function(elem, index){
-            var price_index = price_keywords.indexOf(elem);
-            var usable_index = text.indexOf(elem);
-            var converted_value = 0;
-            var converted_value_key = 0;
-            if ((price_index != -1) && (usable_index > 0)){
-                converted_value_key = text[usable_index-1];
-                if (parseInt(converted_value_key)){
-                    converted_value = converted_value_key*price_value[price_index];
-                    new_text.push(converted_value);
-                }
-                else
-                {
-                    new_text.push(elem);
-                }
-            }
-            else {
-                new_text.push(elem);
-            }
-        })
-        return new_text.join(' ');
-    }
-    function analyse_elements(text){
-        var apartment_element, budget_element, service_obj;
-        // Convert tokens to lowercase
-        var filters ={}
-        var lowerText = text.toLowerCase();
-        var purified_text = '';
-        // Analyse service
-        // Remove All is am are
-        // Analyse BHK
-        // Analyse Budget
-        service_obj = get_service_names(lowerText)
-        filters.service = service_obj.service
-        apartment_element = get_apartment_type(service_obj.updated_text);
-        filters.apartment_type_id = apartment_element.id;
-        
-        purified_text = apartment_element.updated_text.replace('-', ' ');
-        purified_text = purify_budget(apartment_element.updated_text);
-        budget_element = get_budget_range(purified_text);
-        filters.min_price = budget_element.min_budget;
-        filters.max_price = budget_element.max_budget;
-        if(apartment_element.updated_text){
-            search_locality(apartment_element.updated_text, getLocalityResults.bind(this, filters));
+
+        //Locality Analyser
+        function analyse_locality(){
+            search_locality(query, getLocalityResults.bind(this, filter_object.filters));   
         }
-        console.log(filters);
-        return apartment_element;
-        // Analyse Locality
+        function search_locality(str,callback){
+             var matched_str, 
+                 match_city;
+             
+             location_cities.forEach(function(state){
+                 if(!match_city){
+                     var cities = city_location[state];
+                     match_city = cities.filter(function(city){
+                         var reg = new RegExp(city, "i");
+                         return str.match(reg);
+                     });
+                     if(match_city && !match_city.length > 0){
+                         match_city = undefined;
+                     }
+                 }
+             });
+             if(!match_city || !match_city[0]){
+                 match_city = cities.filter(function(city){
+                     var reg = new RegExp(city, "i");
+                     return str.match(reg);
+                 })
+             }
+
+             if(match_city && match_city[0]){
+                 $.ajax({
+                     url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + match_city[0],
+                     success: function(data){
+                         console.log("housing api result is ");
+                         console.log(data);
+                         callback(data[0].uuid);
+                     }
+                 })
+             }
+             else{
+                 done_callback.call(null,filter_object);
+             }
+        }
+        function getLocalityResults(filters, localityId){
+            console.log("Location id is "+localityId);
+            filters.poly = localityId;
+            done_callback.call(null,filter_object);
+        }
+
+
+        function get_articles(){
+            return [" of "," a "," an "," the "," I ", ' in ', ' near '];
+        }
+
+
+
+        analyse_service();
+        var apt_result = analyse_apartment_type(query);
+        query = apt_result.updated_text;
+        filter_object.filters.apartment_type_id = apt_result.id;
+        
+        analyse_budget();
+        analyse_locality();
+
+        return this;
     }
 
-    function getLocalityResults(filters, localityId){
-        console.log("Location id is "+localityId);
-        filters.poly = localityId;
-        console.log(filters);
-    }
+
+    
+    
+
     
     
     //INPUT BOX Component
@@ -246,13 +279,7 @@
         element.append(button);
     }
 
-    
-
-
-    
-
-
-
+    //RESULTS LIST 
     var ResultsList = function(options){
 
         var s_map = {
@@ -366,7 +393,15 @@
 
 
 
+    
+    function analysis_done(filter_object){
+        var results_list = new ResultsList($.extend(filter_object,{append_to:"#results-list"}));
+    }
 
+    function analyse_elements(text){
+        var analyzer = new TextAnalyser(text,analysis_done);
+    }
+    
     function cache_nodes(){
         body = $('body');
         results_list = $("#results-list");
@@ -378,15 +413,17 @@
             append_to     : "#search-box",
             done_callback : analyse_elements
         });
-
-        var results_list = new ResultsList({
-            services : ['buy','rent'],
-            filters : {
-                apartment_type_id : [1,2]
-            },
-            append_to : "#results-list"
-        });
     }
 
     $(document).ready(initialize());
-})();
+})(city_location,location_cities);
+
+
+
+
+
+
+// window.search_locality = function(str, callback){
+
+    
+// }

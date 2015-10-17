@@ -1868,42 +1868,6 @@ city_location["hyderabad"] = [
 "Vyara"
     ];
 
-window.search_locality = function(str, callback){
-	var matched_str; 
-	var match_city;
-	location_cities.forEach(function(state){
-		if(!match_city){
-			var cities = city_location[state];
-			match_city = cities.filter(function(city){
-				var reg = new RegExp(city, "i");
-				return str.match(reg);
-			});
-			if(match_city && !match_city.length > 0){
-				match_city = undefined;
-			}
-		}
-	});
-	if(!match_city || !match_city[0]){
-		match_city = cities.filter(function(city){
-			var reg = new RegExp(city, "i");
-			return str.match(reg);
-		})
-	}
-
-	if(match_city && match_city[0]){
-		$.ajax({
-			url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + match_city[0],
-			success: function(data){
-				console.log("housing api result is ");
-				console.log(data);
-				callback(data[0].city_id);
-			}
-		})
-	}
-	else{
-		console.log("locality not found");
-	}
-	
-}
-
+window.location_cities = location_cities;
+window.city_location = city_location;
 })()
