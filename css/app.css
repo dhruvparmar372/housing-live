@@ -197,6 +197,42 @@ html,body {
     50% {transform: rotate(180deg);}
     100% {transform: rotate(360deg);}
 }
+#tags-list{
+    background-color: #f2b632;
+    opacity:1;
+    transition: all 0.5s ease-in-out;
+}
 
+.tag, .header-tag{
+    margin:  10px;
+    padding: 10px;
+    display: inline-block;
+    background-color: #252839;
+    color: #b5b5b7;
+    border-radius: 5px;
+}
 
-
+#results-list{
+    height: 1000px;
+    background-color: #b5b5b7;    
+}
+body.top-search-bar #tags-list{
+    transform: translateY(-20%);
+    opacity:0;
+}
+#top-header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    height: 50px;
+    width: 100%;
+    background-color: #f2b632;
+    z-index:10;
+    transform: translate3d(0,-100%,0);
+    transition: all 0.4s ease-in-out; 
+}
+body.top-search-bar #top-header{
+    transform: translate3d(0,0,0);
+}

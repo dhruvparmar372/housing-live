@@ -1,7 +1,7 @@
 (function(city_location,location_cities, cities){
     'use strict';
 
-    var body, results_list;
+    var body, results_list, currentSearchBar = 'center';
 
 
 
@@ -415,8 +415,6 @@
         });
     }
 
-
-
     
     function analysis_done(filter_object){
         var results_list = new ResultsList($.extend(filter_object,{append_to:"#results-list"}));
@@ -433,10 +431,62 @@
 
     var initialize = function(){
         cache_nodes();
+        bind_events();
         var input_button = new InputBox({
             append_to     : "#search-box",
             done_callback : analyse_elements
         });
+    }
+
+    function bind_events(){
+        debugger
+        $(window).on('scroll', throttle(function (event) {
+            scroll_events();
+        }, 50));
+    }
+
+    function scroll_events(){
+        var yPos =  pageYOffset;
+        
+        console.log(yPos)
+        debugger
+        if ((yPos > 75) && (currentSearchBar == 'center')){
+            currentSearchBar = 'top';
+            $(body).addClass('top-search-bar')
+            // $('#tags-list').addClass('hide');
+            // $('#lazy-header').addClass('show');
+        }
+
+        if ((yPos < 75) && (currentSearchBar == 'top')){
+            currentSearchBar = 'center';
+            $(body).removeClass('top-search-bar')
+            // $('#tags-list').removeClass('hide');
+            // $('#lazy-header').removeClass('show');
+        }
+
+    }
+    
+    function throttle(fn, threshhold, scope) {
+      threshhold || (threshhold = 250);
+      var last,
+          deferTimer;
+      return function () {
+        var context = scope || this;
+
+        var now = +new Date,
+            args = arguments;
+        if (last && now < last + threshhold) {
+          // hold on to it
+          clearTimeout(deferTimer);
+          deferTimer = setTimeout(function () {
+            last = now;
+            fn.apply(context, args);
+          }, threshhold);
+        } else {
+          last = now;
+          fn.apply(context, args);
+        }
+      };
     }
 
     $(document).ready(initialize);
