@@ -317,6 +317,7 @@
                 $("#start-search-btn").removeClass('pulse')
             },400)
             wave_container.removeClass('inactive');
+            $('#guide-text').text('I am listening now ... ')
             recognizer.start();
         }
         var start_recording_and_scroll = function(){
@@ -329,6 +330,7 @@
             }
             element.removeClass("loading");
             wave_container.addClass('inactive');
+            $('#guide-text').text('Say 1 BHK in Powai between 10000 to 20000...');
             recognizer.stop();
         }
 
