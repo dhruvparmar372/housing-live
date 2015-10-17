@@ -186,7 +186,7 @@ html,body {
 .help-line{
     font-weight: bold;
 }
-#wave-container { position: relative;margin:60px; margin-bottom: 30px;}
+#wave-container { position: relative;margin: 30px; margin-bottom: 30px;}
 #wave-container .dummy-line {
     position           : absolute;
     top                : 50%;
@@ -279,6 +279,26 @@ html,body {
     -o-transform       : translate3d(0,35%,0);
     transform          : translate3d(0,35%,0);
 }
+
+.result::after{
+    content       : '';
+    position      : absolute;
+    bottom        : 27px;
+    right         : 5%;
+    padding       : 5px 10px;
+    border        : 1px solid #2ecc71;
+    border-radius : 2px;
+    color         : #2ecc71;
+}
+.result[service="rent"]::after{
+     content       : 'Rent';
+}
+.result[service="buy"]::after{
+     content       : 'Buy';
+}
+.result[service="pg"]::after{
+     content       : 'PG';
+}
 .result.show{
     -webkit-transform  : translate3d(0,0,0);
     -moz-transform     : translate3d(0,0,0);
@@ -327,12 +347,13 @@ html,body {
 .tag-item{
     float            : left;
     margin-top       : 10px;
-    background-color : #34495e;
+    background-color : white;
     padding          : 8px 10px;
     border-radius    : 2px;
-    color            : white;
+    color            : #34495e;
     font-size        : 14px;
     margin-right     : 10px;
+    border           : 1px solid #34495e;
     text-transform   : capitalize;
 }
 .tag, .header-tag{
@@ -351,6 +372,18 @@ body.top-search-bar #tags-list{
     -o-transform       : translateY(-20%);
     transform          : translateY(-20%);
     opacity:1;
+}
+
+.search-float{
+    float            : right;
+    background-color : #34495e;
+    color            : white;
+    width            : 100px;
+    border-radius    : 2px;
+    padding          : 10px 10px;
+    margin-top       : 6px;
+    margin-right     : 60px;
+    cursor           : pointer;
 }
 #top-header{
     position:fixed;
@@ -389,6 +422,17 @@ body.top-search-bar #top-header{
 
 
 @media only screen and (max-device-width: 375px) {
+    #page-title{
+        font-size: 46px;
+    }
+    #search-box #start-search-btn{
+        padding: 19px 56px;
+        width: 230px;
+    }
+    #search-box  #close-search-btn{
+        padding: 19px 56px;
+        width: 230px;
+    }
     #help-text{
         padding: 10px;
     }
