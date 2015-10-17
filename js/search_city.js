@@ -1,9 +1,4 @@
 (function(){
-	
-/*
-    This javascript file contains var array for all cities and states for autocomplete jquery plugin.
-    And call of autocomplete jquery is also present in this file only. And also contains location of cities.
-*/
 
 var location_cities = ['pune','hyderabad','mumbai','bangalore','chennai','jaipur'];
 
@@ -631,42 +626,42 @@ city_location["hyderabad"] = [
 
     var states = [
     "Andaman and Nicobar Islands",
-      "Andhra Pradesh (AP)",
-"Arunachal Pradesh (AR)",
-"Assam (AS)",
-"Bihar (BR)",
+      "Andhra Pradesh",
+"Arunachal Pradesh",
+"Assam",
+"Bihar",
 "Chandigarh",
-"Chhattisgarh (CG)",
+"Chhattisgarh",
 "Dadra and Nagar Haveli",
 "Daman and Diu" ,
 "Delhi" ,
-"Goa (GA)",
-"Gujarat (GJ)",
-"Haryana (HR)",
-"Himachal Pradesh (HP)",
-"Jammu and Kashmir (JK)",
-"Jharkhand (JH)",
-"Karnataka (KA)",
-"Kerala (KL)",
+"Goa",
+"Gujarat",
+"Haryana",
+"Himachal Pradesh",
+"Jammu and Kashmir",
+"Jharkhand",
+"Karnataka",
+"Kerala",
 "Lakshadweep",
-"Madhya Pradesh (MP)",
-"Maharashtra (MH)",
-"Manipur (MN)",
-"Meghalaya (ML)",
-"Mizoram (MZ)",
-"Nagaland (NL)",
-"Odisha(OR)",
+"Madhya Pradesh",
+"Maharashtra",
+"Manipur",
+"Meghalaya",
+"Mizoram",
+"Nagaland",
+"Odisha",
 "Puducherry",
-"Punjab (PB)",
-"Rajasthan (RJ)",
+"Punjab",
+"Rajasthan",
 "Seemandhra",
-"Sikkim (SK)",
-"Tamil Nadu (TN)",
+"Sikkim",
+"Tamil Nadu",
 "Telangana",
-"Tripura (TR)",
-"Uttar Pradesh (UP)",
-"Uttarakhand (UK)",
-"West Bengal (WB)"
+"Tripura",
+"Uttar Pradesh",
+"Uttarakhand",
+"West Bengal"
     ];
 
     var cities = [
@@ -1871,4 +1866,6 @@ city_location["hyderabad"] = [
 window.location_cities = location_cities;
 window.city_location = city_location;
 window.cities = cities;
+window.states = states;
+
 })()

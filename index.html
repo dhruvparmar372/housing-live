@@ -22,21 +22,6 @@
           // ga('send', 'pageview');
         </script>
 
-        <script type="text/javascript">
-          WebFontConfig = {
-            google: { families: [ 'Roboto:400:latin' ] }
-          };
-          (function() {
-            var wf = document.createElement('script');
-            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-              '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-            wf.type = 'text/javascript';
-            wf.async = 'true';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(wf, s);
-          })(); 
-        </script>
-
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -45,28 +30,18 @@
         
         <div id='main-content'>
           <div id='top-header'>
-            <ul id='header-tags-list'>
-                <li class='header-tag'>1 BHK</li>
-                <li class='header-tag'>2 BHK</li>
-                <li class='header-tag'>30,000 - 60,000</li>
-                <li class='header-tag'>Powai</li>
-            </ul>            
-          </div>
-          <div id='search-box'>
-            <div id="preloader6">
-             <span></span>
-             <span></span>
-             <span></span>
-             <span></span>
-            </div>
           </div>
 
-          <ul id='tags-list'>
-              <li class='tag'>1 BHK</li>
-              <li class='tag'>2 BHK</li>
-              <li class='tag'>30,000 - 60,000</li>
-              <li class='tag'>Powai</li>
-          </ul>
+          <div id='wave-container'>
+              <div class='dummy-line'></div>
+              <div class='listening-text'>Floyd is listening...</div>
+          </div>
+          
+          <div id='search-box'></div>
+          <p id='help-text'>
+            Floyd is here to assist you in your home search. Just speak out your preferences and Floyd will handle the rest. For e.g you can say <span class='help-line'>'1 BHK in Powai between 10000 to 20000'.</span>
+          </p>
+
           <div id='results-list'></div>
             
         </div>
@@ -79,6 +54,16 @@
         <script src="js/vendor.js"></script>
         <script src="js/search_city.js"></script>
         <script src="js/app.js"></script>
+        <script>
+        //   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        //   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        //   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        //   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        //   ga('create', 'UA-68129395-2', 'auto');
+        //   ga('send', 'pageview');
+
+        // </script>
     
     </body>
 </html>

@@ -1,7 +1,8 @@
-(function(city_location,location_cities, cities){
+(function(city_location,location_cities, cities, states){
     'use strict';
 
-    var body, results_list, currentSearchBar = 'center';
+    var body, results_list, tags_list,currentSearchBar = 'center';
+    var wave_form,wave_container;
 
 
 
@@ -12,7 +13,7 @@
                                 services : [],
                                 filters : {}
                             },
-            supported_services = ['rent','buy','pg'],
+            supported_services = ['rent','buy','pg','paying guest'],
             filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid"],
             price_keywords = ['lakhs', 'lakh', 'million', 'millions', 'crore', 'crores', 'thousand', 'thousands'],
             price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000'],
@@ -32,6 +33,14 @@
                     query = query.replace(service, '');
                     filter_object.services.push(service);
                 }
+            }
+            i = 0;
+            while(i < filter_object.services.length){
+                if(filter_object.services[i] === 'paying guest') {
+                    filter_object.services.splice(i,1);
+                    filter_object.services.push('pg');
+                }
+                i++;
             }
         }
 
@@ -62,7 +71,7 @@
                     if (exp_text.indexOf(apt_type) > -1){
                         text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
                         text = text.replace(' s ', '');
-                        return {id: [i+1], updated_text: text, apartment_type_tags : apartment_type_id[i][j]};
+                        return {id: [i+1], updated_text: text, apartment_type_tag : apartment_type_id[i][j]};
                     }
                     j++;
                 }
@@ -78,14 +87,14 @@
                     if (exp_text.indexOf(apt_type) > -1){
                         text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
                         text = text.replace(' s ', '');
-                        return {id: [i+1], updated_text: text, apartment_type_tags : apartment_type_id[i][j]};
+                        return {id: [i+1], updated_text: text, apartment_type_tag : apartment_type_id[i][j]};
                     }
                     j++;
                 }
                 i++;
             }
             post_elements = get_post_filter_keywords()
-            return{id: [], updated_text: text, apartment_type_tags: []}
+            return{id: [], updated_text: text, apartment_type_tag: []}
         }
 
         function get_filter_keywords(){
@@ -196,7 +205,8 @@
         }
         function search_locality(str,callback){
              var matched_str, 
-                 match_city;
+                 match_city,
+                 state_match;
              
              location_cities.forEach(function(state){
                  if(!match_city){
@@ -217,13 +227,39 @@
                  })
              }
 
+             state_match = states.filter(function(state){
+                var reg = new RegExp(state, "i");
+                return str.match(reg);
+             });
+
+             if(state_match && state_match[0]){
+                state_match = state_match[0]
+             }
+             else{
+                state_match = ""
+             }
+
              if(match_city && match_city[0]){
+                match_city = match_city[0]
+             }
+             else{
+                match_city = ""
+             }
+
+             if(match_city || state_match){
+                if(match_city && state_match){
+                    state_match = ", " + state_match
+                }
+                var query_string = encodeURIComponent(match_city + state_match);
                  $.ajax({
-                     url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + match_city[0],
+                     url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + query_string,
                      success: function(data){
                          console.log("housing api result is ");
                          console.log(data);
-                         callback(data[0].uuid);
+                         callback({
+                            id   : data[0].uuid,
+                            name : data[0].name
+                         });
                      }
                  })
              }
@@ -231,9 +267,10 @@
                  done_callback.call(null,filter_object);
              }
         }
-        function getLocalityResults(filters, localityId){
-            console.log("Location id is "+localityId);
-            filters.poly = localityId;
+        function getLocalityResults(filters, locality_details){
+            console.log("Location is "+locality_details);
+            filters.poly = locality_details.id;
+            filters.poly_tag = locality_details.name;
             done_callback.call(null,filter_object);
         }
 
@@ -247,7 +284,7 @@
         var apt_result = analyse_apartment_type(query);
         query = apt_result.updated_text;
         filter_object.filters.apartment_type_id = apt_result.id;
-        filter_object.apartment_type_tags = apt_result.apartment_type_tags;
+        filter_object.apartment_type_tag = apt_result.apartment_type_tag;
         analyse_budget();
         analyse_locality();
 
@@ -264,6 +301,7 @@
     var InputBox = function(options){
         var element = $(options.append_to),
             button = $("<button id='start-search-btn' class='app-btn'>Start Search</button>"),
+            close_button = $("<button id='close-search-btn' class='app-btn'>Stop</button>"),
             recognizer = new webkitSpeechRecognition(),
             cb = options.done_callback,
             self = this;
@@ -272,8 +310,24 @@
             if(self.listening)
                 return;
             self.listening = true;
+            button = $("#start-search-btn");
+            debugger
             element.addClass("loading");
+            button.addClass('pulse')
+            setTimeout(function(){
+                $("#start-search-btn").removeClass('pulse')
+            },400)
+            wave_container.removeClass('inactive');
             recognizer.start();
+        }
+
+        var stop_recording = function(){
+            if(self.listening){
+                self.listening = false;
+            }
+            element.removeClass("loading");
+            wave_container.addClass('inactive');
+            recognizer.stop();
         }
 
         var recognizer_result = function(event) {
@@ -294,7 +348,9 @@
         recognizer.lang = options.language || "en";
         recognizer.onresult = recognizer_result;
         button.bind('click',start_recording);
+        close_button.bind('click',stop_recording);
         element.append(button);
+        element.append(close_button);
     }
 
     //RESULTS LIST 
@@ -309,8 +365,17 @@
                 },
                 base_filters : { details : true },
                 get_rendered_item : function(result){
-                    var temp_str = "<div class='result' service='rent' data-id="+result.id+">"+result.apartment_type
-                                    +" "+result.furnish_type+"</div>";
+                    var image = result.thumb_url_new ? result.thumb_url_new.replace('version', 'medium') : ''
+                    var temp_str = "<div class='result' service='rent' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.seo_title +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_rent + "</div>" +
+                                        "<div>" +
+                                    "</div>";
                     return $(temp_str);
                 }
             },
@@ -320,33 +385,81 @@
                     return search_result.hits;
                 },
                 get_rendered_item : function(result){
-                    var temp_str = "<div class='result' service='buy' data-id="+result.id+">"+result.title
-                                    +" "+result.street_info+"</div>";
+                    var tag = result.type == 'project' ? '_m' : 'medium';
+                    var image = result.thumb_image_url ? result.thumb_image_url.replace('version', tag) : ''
+                    var temp_str = "<div class='result' service='buy' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.title +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_price + "</div>" +
+                                        "<div>" +
+                                    "</div>";
+                    return $(temp_str);
+                }
+            },
+            'pg' : {
+                url : "https://pg.housing.com/api/v3/pg//filter?",
+                base_filters : { details : true },
+                transform_results : function(search_result){
+                    return search_result.hits.hits.map(function(hit){
+                        return hit._source;
+                    });
+                },
+                get_rendered_item : function(result){
+                    var image = result.thumb_url ? result.thumb_url.replace('version', 'medium') : ''
+                    var temp_str = "<div class='result' service='pg' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.apartment_type +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_min_rent + "</div>" +
+                                        "<div>" +
+                                    "</div>";
                     return $(temp_str);
                 }
             }
         }
 
-
         //Default Options
-        var defaults = {
-            services : ['buy','rent']
-        };
+        var default_services = ['buy','rent'];
         var base_filters = {
             sort_key         : "relevance",
             results_per_page : 30
         };
+
+        var tags = [];
+        if(options.apartment_type_tag)
+            tags.push(options.apartment_type_tag);
         
         
-        var options     = $.extend(options,defaults),
-            filter_tags = [],
+        var filter_tags = [],
             $element    = $(options.append_to);
         
         options.filter = $.extend(options.filters,base_filters);
 
         if(options.services.length === 0)
-            options.services = defaults.services;
+            options.services = default_services;
 
+        if(options.filter && options.filter.poly_tag)
+            tags.push(options.filter.poly_tag);
+
+        var price_tag = "";
+        if(options.filters && options.filters['min_price']){
+            price_tag = get_formatted_price(options.filters['min_price']);
+        }
+        if(options.filters && options.filters['max_price']){
+            if(price_tag)
+                price_tag += " - " + get_formatted_price(options.filters['max_price']);
+            else
+                price_tag = get_formatted_price(options.filters['max_price']);
+        }
+        if(price_tag)
+            tags.push(price_tag);
      
         //build filter url
         var build_url = function(filter_object,service){
@@ -365,6 +478,7 @@
                         url = url+"apartment_type_id="+filter_object[key].join(",");
                         break;
                     case 'sort_key':
+                    case 'poly':
                     case 'results_per_page' :
                     case 'details':
                     case 'max_price':
@@ -393,6 +507,10 @@
         }
 
 
+        function get_formatted_price(price){
+            return "Rs. "+price;
+        }
+
 
         RSVP.Promise.all(options.services.map(function(service){
             var url = build_url(options.filters,service);
@@ -402,22 +520,29 @@
             });
         })).then(function(service_results){
             
-            var rendered = service_results.map(function(s_result){
+            var tags_list = tags.reduce(function(list,tag){
+                var str = "<li class='tag-item'>"+tag+"</li>";
+                return list.append($(str));
+            },$("<ul class='tags-list'></ul>"));
+            results_list.empty();
+            var nodes = [];
+            service_results.forEach(function(s_result){
                 var results = s_result.results,
                     service_obj = s_map[s_result.service];
 
-                return results.reduce(function(list,result){
-                    return list.append(service_obj.get_rendered_item(result));
-                },$("<div class='result-list'></div>"));
+                results.forEach(function(result){
+                    nodes.push(service_obj.get_rendered_item(result));
+                });
             });
-            
-            $element.append(rendered);
+            $element.append(tags_list)
+            results_list.append(nodes);
         });
     }
 
     
     function analysis_done(filter_object){
-        var results_list = new ResultsList($.extend(filter_object,{append_to:"#results-list"}));
+        var filter_results_list = new ResultsList($.extend(filter_object,{append_to:"#results-list"}));
+        wave_container.addClass('inactive');
     }
 
     function analyse_elements(text){
@@ -427,6 +552,7 @@
     function cache_nodes(){
         body = $('body');
         results_list = $("#results-list");
+        wave_container = $("#wave-container");
     }
 
     var initialize = function(){
@@ -436,6 +562,18 @@
             append_to     : "#search-box",
             done_callback : analyse_elements
         });
+        
+        var wave_width = Math.min($(window).innerWidth()*0.8,600),
+            wave_container = $('#wave-container').addClass('inactive');
+        wave_form = new SiriWave9({
+                        width     : wave_width,
+                        height    : Math.floor(wave_width/3),
+                        speed     : 1,
+                        container : document.getElementById('wave-container'),
+                        autostart : true
+                    });
+
+
     }
 
     function bind_events(){
@@ -490,7 +628,7 @@
     }
 
     $(document).ready(initialize);
-})(city_location,location_cities, cities);
+})(city_location,location_cities, cities, states);
 
 
 
