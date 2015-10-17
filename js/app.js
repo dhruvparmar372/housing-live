@@ -289,7 +289,6 @@
 
     //RESULTS LIST 
     var ResultsList = function(options){
-        debugger
         var s_map = {
             'rent' : {
                 url : "https://rails.housing.com//api/v3/rent/filter?",
