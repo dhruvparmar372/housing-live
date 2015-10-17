@@ -1,4 +1,4 @@
-(function(city_location,location_cities, cities){
+(function(city_location,location_cities, cities, states){
     'use strict';
 
     var body, results_list;
@@ -197,7 +197,8 @@
         }
         function search_locality(str,callback){
              var matched_str, 
-                 match_city;
+                 match_city,
+                 state_match;
              
              location_cities.forEach(function(state){
                  if(!match_city){
@@ -218,9 +219,32 @@
                  })
              }
 
+             state_match = states.filter(function(state){
+                var reg = new RegExp(state, "i");
+                return str.match(reg);
+             });
+
+             if(state_match && state_match[0]){
+                state_match = state_match[0]
+             }
+             else{
+                state_match = ""
+             }
+
              if(match_city && match_city[0]){
+                match_city = match_city[0]
+             }
+             else{
+                match_city = ""
+             }
+
+             if(match_city || state_match){
+                if(match_city && state_match){
+                    state_match = ", " + state_match
+                }
+                var query_string = encodeURIComponent(match_city + state_match);
                  $.ajax({
-                     url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + match_city[0],
+                     url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + query_string,
                      success: function(data){
                          console.log("housing api result is ");
                          console.log(data);
@@ -311,8 +335,18 @@
                 },
                 base_filters : { details : true },
                 get_rendered_item : function(result){
-                    var temp_str = "<div class='result' service='rent' data-id="+result.id+">"+result.apartment_type
-                                    +" "+result.furnish_type+"</div>";
+                    var tag = result.type == 'project' ? '_m' : 'medium';
+                    var image = result.thumb_url_new ? result.thumb_url_new.replace('version', tag) : ''
+                    var temp_str = "<div class='result' service='rent' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.seo_title +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_rent + "</div>" +
+                                        "<div>" +
+                                    "</div>";
                     return $(temp_str);
                 }
             },
@@ -322,8 +356,37 @@
                     return search_result.hits;
                 },
                 get_rendered_item : function(result){
-                    var temp_str = "<div class='result' service='buy' data-id="+result.id+">"+result.title
-                                    +" "+result.street_info+"</div>";
+                    var image = result.thumb_image_url ? result.thumb_image_url.replace('version', 'medium') : ''
+                    var temp_str = "<div class='result' service='buy' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.title +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_price + "</div>" +
+                                        "<div>" +
+                                    "</div>";
+                    return $(temp_str);
+                }
+            },
+            'pg' : {
+                url : "https://pg.housing.com/api/v3/pg//filter?",
+                transform_results : function(search_result){
+                    return search_result.hits;
+                },
+                get_rendered_item : function(result){
+                    var image = result.thumb_url ? result.thumb_url.replace('version', 'medium') : ''
+                    var temp_str = "<div class='result' service='pg' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.apartment_type +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_min_rent + "</div>" +
+                                        "<div>" +
+                                    "</div>";
                     return $(temp_str);
                 }
             }
@@ -457,7 +520,7 @@
     }
 
     $(document).ready(initialize);
-})(city_location,location_cities, cities);
+})(city_location,location_cities, cities, states);
 
 
 
