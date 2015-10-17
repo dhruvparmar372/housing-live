@@ -241,10 +241,7 @@ html,body {
     border-radius: 5px;
 }
 
-#results-list{
-    height: 1000px;
-    background-color: #b5b5b7;    
-}
+#results-list{ margin: 40px auto; }
 body.top-search-bar #tags-list{
     transform: translateY(-20%);
     opacity:0;
