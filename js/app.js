@@ -1,7 +1,7 @@
 (function(city_location,location_cities, cities, states){
     'use strict';
 
-    var body, results_list, tags_list;
+    var body, results_list, tags_list,currentSearchBar = 'center';
     var wave_form,wave_container;
 
 
@@ -310,7 +310,13 @@
             if(self.listening)
                 return;
             self.listening = true;
+            button = $("#start-search-btn");
+            debugger
             element.addClass("loading");
+            button.addClass('pulse')
+            setTimeout(function(){
+                $("#start-search-btn").removeClass('pulse')
+            },400)
             wave_container.removeClass('inactive');
             recognizer.start();
         }
@@ -521,7 +527,6 @@
                 tag_nodes.push($(str));
             });
             tags_list.append(tag_nodes);
-            
             results_list.empty();
             var nodes = [];
             service_results.forEach(function(s_result){
@@ -535,8 +540,6 @@
             results_list.append(nodes);
         });
     }
-
-
 
     
     function analysis_done(filter_object){
@@ -557,6 +560,7 @@
 
     var initialize = function(){
         cache_nodes();
+        bind_events();
         var input_button = new InputBox({
             append_to     : "#search-box",
             done_callback : analyse_elements
@@ -573,6 +577,56 @@
                     });
 
 
+    }
+
+    function bind_events(){
+        debugger
+        $(window).on('scroll', throttle(function (event) {
+            scroll_events();
+        }, 50));
+    }
+
+    function scroll_events(){
+        var yPos =  pageYOffset;
+        
+        console.log(yPos)
+        if ((yPos > 75) && (currentSearchBar == 'center')){
+            currentSearchBar = 'top';
+            $(body).addClass('top-search-bar')
+            // $('#tags-list').addClass('hide');
+            // $('#lazy-header').addClass('show');
+        }
+
+        if ((yPos < 75) && (currentSearchBar == 'top')){
+            currentSearchBar = 'center';
+            $(body).removeClass('top-search-bar')
+            // $('#tags-list').removeClass('hide');
+            // $('#lazy-header').removeClass('show');
+        }
+
+    }
+    
+    function throttle(fn, threshhold, scope) {
+      threshhold || (threshhold = 250);
+      var last,
+          deferTimer;
+      return function () {
+        var context = scope || this;
+
+        var now = +new Date,
+            args = arguments;
+        if (last && now < last + threshhold) {
+          // hold on to it
+          clearTimeout(deferTimer);
+          deferTimer = setTimeout(function () {
+            last = now;
+            fn.apply(context, args);
+          }, threshhold);
+        } else {
+          last = now;
+          fn.apply(context, args);
+        }
+      };
     }
 
     $(document).ready(initialize);
