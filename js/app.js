@@ -419,11 +419,8 @@
             }
         }
 
-        debugger;
         //Default Options
-        var defaults = {
-            services : ['buy','rent']
-        };
+        var default_services = ['buy','rent'];
         var base_filters = {
             sort_key         : "relevance",
             results_per_page : 30
@@ -434,14 +431,13 @@
             tags.push(options.apartment_type_tag);
         
         
-        var options     = $.extend(defaults,options),
-            filter_tags = [],
+        var filter_tags = [],
             $element    = $(options.append_to);
         
         options.filter = $.extend(options.filters,base_filters);
 
         if(options.services.length === 0)
-            options.services = defaults.services;
+            options.services = default_services;
 
         if(options.filter && options.filter.poly_tag)
             tags.push(options.filter.poly_tag);
