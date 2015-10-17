@@ -389,6 +389,7 @@
                         url = url+"apartment_type_id="+filter_object[key].join(",");
                         break;
                     case 'sort_key':
+                    case 'poly':
                     case 'results_per_page' :
                     case 'details':
                     case 'max_price':
