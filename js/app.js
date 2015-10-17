@@ -256,8 +256,6 @@
                  $.ajax({
                      url: 'https://buy.housing.com/api/v0/search/suggest/?&string=' + query_string,
                      success: function(data){
-                         console.log("housing api result is ");
-                         console.log(data);
                          callback({
                             id   : data[0].uuid,
                             name : data[0].name
@@ -270,7 +268,6 @@
              }
         }
         function getLocalityResults(filters, locality_details){
-            console.log("Location is "+locality_details);
             filters.poly = locality_details.id;
             filters.poly_tag = locality_details.name;
             done_callback.call(null,filter_object);
@@ -341,7 +338,6 @@
                 var result = event.results[event.results.length-1];
                 if(result.isFinal) {
                     if(typeof cb === "function"){
-                        console.log(result[0].transcript);
                         cb.call(this,result[0].transcript);
                     }
                     element.removeClass('loading');
