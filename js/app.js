@@ -305,7 +305,6 @@
             recognizer = new webkitSpeechRecognition(),
             cb = options.done_callback,
             self = this;
-        
         var start_recording = function(){
             if(self.listening)
                 return;
@@ -319,7 +318,10 @@
             wave_container.removeClass('inactive');
             recognizer.start();
         }
-
+        var start_recording_and_scroll = function(){
+            $("html, body").animate({ scrollTop: 0 }, 500)
+            start_recording()
+        }
         var stop_recording = function(){
             if(self.listening){
                 self.listening = false;
@@ -348,6 +350,7 @@
         recognizer.onresult = recognizer_result;
         button.bind('click',start_recording);
         close_button.bind('click',stop_recording);
+        $('.search-float').bind('click',start_recording_and_scroll);
         element.append(button);
         element.append(close_button);
     }
@@ -560,6 +563,13 @@
                 $("html, body").animate({ scrollTop: top }, 500)
             },100)
             results_list.append(nodes);
+            $('#results-list .result').each(function(i){
+                setTimeout(function(){
+                    $('#results-list .result').eq(i).addClass('show');
+                }, 150*(i+1))
+                
+            })            
+
         });
     }
 
@@ -587,7 +597,7 @@
             append_to     : "#search-box",
             done_callback : analyse_elements
         });
-        
+        animations();
         var wave_width = Math.min($(window).innerWidth()*0.8,600),
             wave_container = $('#wave-container').addClass('inactive');
         wave_form = new SiriWave9({
@@ -603,6 +613,20 @@
 
     }
 
+    function animations(){
+        $('#page-title').addClass('animate')
+        $('#wave-container').addClass('animate')
+        $('#search-box').addClass('animate')
+        $('#help-text').addClass('animate')
+        setTimeout(function(){
+            $('.dummy-line').addClass('addWidth')
+        },1000)
+        
+        setTimeout(function(){
+            $('.dummy-line').addClass('addColor')
+        },2000)
+        
+    }
     function bind_events(){
         $(window).on('scroll', throttle(function (event) {
             scroll_events();
