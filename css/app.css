@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
     line-height: 1;
+    background-color: #E8E8E8;
 }
 ol, ul {
     list-style: none;
@@ -182,5 +183,24 @@ html,body {
 
 #tags-list { display: none; }
 
+.result-list{
+    width: 100%;
+    overflow: hidden;
+}
+.result{
+    width: 32%;
+    float: left;
+    margin-left: 1%;
+    padding: 3px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 5px;
+    height: 365px;
+}
+.result img{
+    width: 100%;
+}
 
 
