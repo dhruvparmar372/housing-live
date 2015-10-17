@@ -281,7 +281,7 @@
 
     //RESULTS LIST 
     var ResultsList = function(options){
-
+        debugger
         var s_map = {
             'rent' : {
                 url : "https://rails.housing.com//api/v3/rent/filter?",
@@ -321,10 +321,13 @@
         };
         
         
-        var options = $.extend(defaults,options),
+        var options = $.extend(options,defaults),
             $element = $(options.append_to);
         
         options.filter = $.extend(options.filters,base_filters);
+
+        if(options.services.length === 0)
+            options.services = defaults.services;
 
      
         //build filter url
