@@ -309,8 +309,18 @@
                 },
                 base_filters : { details : true },
                 get_rendered_item : function(result){
-                    var temp_str = "<div class='result' service='rent' data-id="+result.id+">"+result.apartment_type
-                                    +" "+result.furnish_type+"</div>";
+                    var tag = result.type == 'project' ? '_m' : 'medium';
+                    var image = result.thumb_url_new ? result.thumb_url_new.replace('version', tag) : ''
+                    var temp_str = "<div class='result' service='rent' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.seo_title +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_rent + "</div>" +
+                                        "<div>" +
+                                    "</div>";
                     return $(temp_str);
                 }
             },
@@ -320,8 +330,37 @@
                     return search_result.hits;
                 },
                 get_rendered_item : function(result){
-                    var temp_str = "<div class='result' service='buy' data-id="+result.id+">"+result.title
-                                    +" "+result.street_info+"</div>";
+                    var image = result.thumb_image_url ? result.thumb_image_url.replace('version', 'medium') : ''
+                    var temp_str = "<div class='result' service='buy' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.title +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_price + "</div>" +
+                                        "<div>" +
+                                    "</div>";
+                    return $(temp_str);
+                }
+            },
+            'pg' : {
+                url : "https://pg.housing.com/api/v3/pg//filter?",
+                transform_results : function(search_result){
+                    return search_result.hits;
+                },
+                get_rendered_item : function(result){
+                    var image = result.thumb_url ? result.thumb_url.replace('version', 'medium') : ''
+                    var temp_str = "<div class='result' service='pg' data-id="+ result.id +">" +
+                                        "<div class='image-container'>" +
+                                            "<img src='" + image + "'/>" +
+                                        "</div>" +
+                                        "<div class='details-container'>" +
+                                            "<div class='apartment-type'>" + result.apartment_type +"</div>" +
+                                            "<div class='locality'>" + result.street_info +"</div>" +
+                                            "<div class='price'>" + result.formatted_min_rent + "</div>" +
+                                        "<div>" +
+                                    "</div>";
                     return $(temp_str);
                 }
             }
