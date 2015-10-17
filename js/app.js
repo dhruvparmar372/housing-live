@@ -550,7 +550,8 @@
                 });
             });
             setTimeout(function(){
-               $("html, body").animate({ scrollTop: $('#results-list').offset().top }, 500)
+                var top = $('#results-list').offset().top - $('#top-header').height() - 10
+                $("html, body").animate({ scrollTop: top }, 500)
             },100)
             results_list.append(nodes);
         });
