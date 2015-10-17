@@ -192,18 +192,25 @@ html,body {
     right              : 0;
     bottom             : 0;
     height             : 1px;
-    background         : #d9d9d9;
+    /*background         : #d9d9d9;*/
+    background         : #e74c3c;
     max-width          : 400px;
-    width              : 85%;
+    width              : 0;
     opacity            : 0;
     -webkit-transform  : translate3d(-50%,-50%,0);
     -moz-transform     : translate3d(-50%,-50%,0);
     -o-transform       : translate3d(-50%,-50%,0);
     transform          : translate3d(-50%,-50%,0);
-    -webkit-transition : opacity 0.2s ease-in-out;
-    -moz-transition    : opacity 0.2s ease-in-out;
-    -o-transition      : opacity 0.2s ease-in-out;
-    transition         : opacity 0.2s ease-in-out;
+    -webkit-transition : all 1.5s ease-in-out;
+    -moz-transition    : all 1.5s ease-in-out;
+    -o-transition      : all 1.5s ease-in-out;
+    transition         : all 1.5s ease-in-out;
+}
+#wave-container .dummy-line.addWidth{
+    width:100%;
+}
+#wave-container .dummy-line.addColor{
+    background: #d9d9d9;
 }
 #wave-container.inactive .dummy-line { opacity: 1; }
 #wave-container canvas { 
@@ -252,6 +259,13 @@ html,body {
     text-decoration  : none;
     color            : #333;
     cursor           : pointer;
+    opacity          : 0;
+    transition       : all 0.3s ease-in-out;
+    transform        : translate3d(0,35%,0);
+}
+.result.show{
+    transform: translate3d(0,0,0);
+    opacity: 1;
 }
 .result:nth-child(3n) { margin-right: 0; }
 .result img{
@@ -375,3 +389,44 @@ body.top-search-bar #top-header{
 
 /* Service Overrides */
 .result[service='pg'] { min-height: 360px; }
+
+#page-title{
+    opacity:0;
+    transition: all 0.8s ease-in-out;
+    transform: translate3d(0,25%,0);
+}
+#page-title.animate{
+    opacity: 1;
+    transform: translate3d(0,0,0);
+}
+#wave-container{
+    opacity:0;
+    transition: all 0.5s ease-in-out;
+    transform: translate3d(0,25%,0);
+}
+#wave-container.animate{
+    transition-delay: 0.4s;
+    opacity:1;
+    transform: translate3d(0,0,0);
+}
+#search-box{
+    opacity:0;
+    transition: all 0.5s ease-in-out;
+    transform: translate3d(0,25%,0);
+}
+#search-box.animate{
+    opacity:1;
+    transition-delay:0.6s;
+    transform: translate3d(0,0,0);
+}
+#help-text{
+    opacity:0;
+    transition: all 0.4s ease-in-out;
+    transform: translate3d(0,25%,0);
+}
+#help-text.animate{
+    opacity: 1;
+    transition-delay:0.8s;
+    transform: translate3d(0,0,0);
+}
+#

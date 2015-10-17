@@ -554,6 +554,13 @@
                 $("html, body").animate({ scrollTop: top }, 500)
             },100)
             results_list.append(nodes);
+            $('#results-list .result').each(function(i){
+                setTimeout(function(){
+                    $('#results-list .result').eq(i).addClass('show');
+                }, 150*(i+1))
+                
+            })            
+
         });
     }
 
@@ -581,7 +588,7 @@
             append_to     : "#search-box",
             done_callback : analyse_elements
         });
-        
+        animations();
         var wave_width = Math.min($(window).innerWidth()*0.8,600),
             wave_container = $('#wave-container').addClass('inactive');
         wave_form = new SiriWave9({
@@ -597,6 +604,20 @@
 
     }
 
+    function animations(){
+        $('#page-title').addClass('animate')
+        $('#wave-container').addClass('animate')
+        $('#search-box').addClass('animate')
+        $('#help-text').addClass('animate')
+        setTimeout(function(){
+            $('.dummy-line').addClass('addWidth')
+        },1000)
+        
+        setTimeout(function(){
+            $('.dummy-line').addClass('addColor')
+        },2000)
+        
+    }
     function bind_events(){
         $(window).on('scroll', throttle(function (event) {
             scroll_events();
