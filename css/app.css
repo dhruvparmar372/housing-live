@@ -293,12 +293,13 @@ html,body {
 .tag-item{
     float            : left;
     margin-top       : 10px;
-    background-color : #34495e;
+    background-color : white;
     padding          : 8px 10px;
     border-radius    : 2px;
-    color            : white;
+    color            : #34495e;
     font-size        : 14px;
     margin-right     : 10px;
+    border           : 1px solid #34495e;
     text-transform   : capitalize;
 }
 .tag, .header-tag{
@@ -314,6 +315,17 @@ html,body {
 body.top-search-bar #tags-list{
     transform: translateY(-20%);
     opacity:1;
+}
+.search-float{
+    float            : right;
+    background-color : #34495e;
+    color            : white;
+    width            : 100px;
+    border-radius    : 2px;
+    padding          : 10px 10px;
+    margin-top       : 6px;
+    margin-right     : 60px;
+    cursor           : pointer;
 }
 #top-header{
     position:fixed;

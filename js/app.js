@@ -305,7 +305,6 @@
             recognizer = new webkitSpeechRecognition(),
             cb = options.done_callback,
             self = this;
-        
         var start_recording = function(){
             if(self.listening)
                 return;
@@ -319,7 +318,10 @@
             wave_container.removeClass('inactive');
             recognizer.start();
         }
-
+        var start_recording_and_scroll = function(){
+            $("html, body").animate({ scrollTop: 0 }, 500)
+            start_recording()
+        }
         var stop_recording = function(){
             if(self.listening){
                 self.listening = false;
@@ -348,6 +350,7 @@
         recognizer.onresult = recognizer_result;
         button.bind('click',start_recording);
         close_button.bind('click',stop_recording);
+        $('.search-float').bind('click',start_recording_and_scroll);
         element.append(button);
         element.append(close_button);
     }
