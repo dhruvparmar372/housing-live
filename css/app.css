@@ -108,20 +108,22 @@ html,body {
 }
 
 #page-title{
-    font-size: 60px;
-    margin: 0 auto;
-    margin: 10px;
-    padding: 10px;    
+    font-size   : 60px;
+    margin      : 10px auto;
+    padding     : 10px;    
+    font-weight : lighter;
 }
 #start-search-btn{
-    display: block;
-    margin: 0 auto;
-    width:300px;
+    display     : block;
+    margin      : 0 auto;
+    width       : 300px;
+    font-weight : lighter;
 }
 #close-search-btn{
-    display: none;
-    margin: 0 auto;
-    width:300px;
+    display     : none;
+    margin      : 0 auto;
+    width       : 300px;
+    font-weight : lighter;
 }
 #search-box.loading #start-search-btn{
     display: none;
@@ -143,19 +145,19 @@ html,body {
     outline            : none;
     position           : relative;
     border-radius      : 40px;
-    color              : #aaa;
+    color              : #333;
     border             : 1px solid #aaa;
     -webkit-transition : all 0.15s ease-in-out;
     -o-transition      : all 0.15s ease-in-out;
     -moz-transition    : all 0.15s ease-in-out;
     transition         : all 0.15s ease-in-out;
     overflow: visible;
-    -webkit-transition: color 0.7s;
-    transition: color 0.7s;
+    -webkit-transition: color 0.7s, background-color 0.2s ease-in-out;
+    transition: color 0.7s, background-color 0.2s ease-in-out;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);    
 }
 
-.app-btn:hover { background: #f5f5f5;outline:none; }
+.app-btn:hover { background: #fff; outline:none; }
 
 .app-btn::after {
     position: absolute;
@@ -298,8 +300,21 @@ html,body {
     background-color: white;
     opacity:1;
     transition: all 0.5s ease-in-out;
+    max-width: 1170px;
+    margin: 0 auto;
 }
 
+.tag-item{
+    float            : left;
+    margin-top       : 10px;
+    background-color : #34495e;
+    padding          : 8px 10px;
+    border-radius    : 2px;
+    color            : white;
+    font-size        : 14px;
+    margin-right     : 10px;
+    text-transform   : capitalize;
+}
 .tag, .header-tag{
     margin:  10px;
     padding: 10px;
@@ -312,7 +327,7 @@ html,body {
 #results-list{ margin: 40px auto; }
 body.top-search-bar #tags-list{
     transform: translateY(-20%);
-    opacity:0;
+    opacity:1;
 }
 #top-header{
     position:fixed;
@@ -335,6 +350,52 @@ body.top-search-bar #top-header{
 .app-btn.pulse::after {
     -webkit-animation: anim-effect-tamara 0.5s ease-out forwards;
     animation: anim-effect-tamara 0.5s ease-out forwards;
+}
+
+
+
+@media only screen and (max-device-width: 375px) {
+    #help-text{
+        padding: 10px;
+    }
+    #results-list{
+        margin: 10px;
+        overflow: hidden;
+    }
+    #results-list .result{
+        width: 100%;
+        margin-bottom: 12px;
+    }
+    #help-text{
+        margin: 35px auto;
+    }
+}
+
+@media only screen and (min-device-width: 376px) and (max-device-width: 500px) {
+    #help-text{
+        padding: 10px;
+    }
+    #results-list{
+        margin: 10px;
+        overflow: hidden;
+    }
+    #results-list .result{
+        width: 100%;
+    }
+}
+
+@media only screen and (min-device-width: 501px) and (max-device-width: 1000px){
+    #help-text{
+        padding: 10px;
+    }
+    #results-list{
+        margin: 10px;
+        overflow: hidden;
+    }
+    #results-list .result{
+        width: 48%;
+        margin: 0 1% 1% 1%;
+    }
 }
 
 @-webkit-keyframes anim-effect-tamara {
@@ -380,7 +441,7 @@ body.top-search-bar #top-header{
 .locality {
     font-size   : 14px;
     line-height : 18px;
-    margin      : 10px auto;
+    margin      : 10px auto 15px;
     color       : #aaa;
     min-height  : 36px;
 }
