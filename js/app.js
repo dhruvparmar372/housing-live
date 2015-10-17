@@ -178,6 +178,124 @@
     
 
 
+    
+
+
+
+    var ResultsList = function(options){
+
+        var s_map = {
+            'rent' : {
+                url : "https://rails.housing.com//api/v3/rent/filter?",
+                transform_results : function(search_result){
+                    return search_result.hits.hits.map(function(hit){
+                        return hit._source;
+                    });
+                },
+                base_filters : { details : true },
+                get_rendered_item : function(result){
+                    var temp_str = "<div class='result' service='rent' data-id="+result.id+">"+result.apartment_type
+                                    +" "+result.furnish_type+"</div>";
+                    return $(temp_str);
+                }
+            },
+            'buy' : {
+                url : "https://buy.housing.com/api/v1/buy/index/filter?",
+                transform_results : function(search_result){
+                    return search_result.hits;
+                },
+                get_rendered_item : function(result){
+                    var temp_str = "<div class='result' service='buy' data-id="+result.id+">"+result.title
+                                    +" "+result.street_info+"</div>";
+                    return $(temp_str);
+                }
+            }
+        }
+
+
+        //Default Options
+        var defaults = {
+            services : ['buy','rent']
+        };
+        var base_filters = {
+            sort_key         : "relevance",
+            results_per_page : 30
+        };
+        
+        
+        var options = $.extend(defaults,options),
+            $element = $(options.append_to);
+        
+        options.filter = $.extend(options.filters,base_filters);
+
+     
+        //build filter url
+        var build_url = function(filter_object,service){
+            var service_obj = s_map[service],
+                url = service_obj && service_obj.url,
+                filters = $.extend(filter_object,service_obj.base_filters);
+            
+            if(!url){
+                console.error('did not find url for service');
+                return;
+            }
+            
+            for(var key in filters){
+                switch(key){
+                    case 'apartment_type_id' :
+                        url = url+"apartment_type_id="+filter_object[key].join(",");
+                        break;
+                    case 'sort_key':
+                    case 'results_per_page' :
+                    case 'details':
+                        url = url+"&"+key+"="+filter_object[key].toString();
+                        break;
+                    default :
+                        url = url;
+                }
+            }
+            return url;            
+        }
+
+
+        //filter call wrapper
+        var filter_call = function(url,service){
+            var service_obj = s_map[service];
+            return new RSVP.Promise(function(resolve,reject){
+                $.getJSON(url).then(function(data){
+                    resolve(service_obj.transform_results(data));
+                },function(err){
+                    reject(err);
+                });
+            });
+        }
+
+
+
+        RSVP.Promise.all(options.services.map(function(service){
+            var url = build_url(options.filters,service);
+            return RSVP.hash({ 
+                results : filter_call(url,service),
+                service : service
+            });
+        })).then(function(service_results){
+            
+            var rendered = service_results.map(function(s_result){
+                var results = s_result.results,
+                    service_obj = s_map[s_result.service];
+
+                return results.reduce(function(list,result){
+                    return list.append(service_obj.get_rendered_item(result));
+                },$("<div class='result-list'></div>"));
+            });
+            
+            $element.append(rendered);
+        });
+    }
+
+
+
+
     function cache_nodes(){
         body = $('body');
         results_list = $("#results-list");
@@ -188,6 +306,14 @@
         var input_button = new InputBox({
             append_to     : "#search-box",
             done_callback : analyse_elements
+        });
+
+        var results_list = new ResultsList({
+            services : ['buy','rent'],
+            filters : {
+                apartment_type_id : [1,2]
+            },
+            append_to : "#results-list"
         });
     }
 
