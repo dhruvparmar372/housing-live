@@ -1,9 +1,7 @@
-(function(city_location,location_cities){
+(function(city_location,location_cities, cities){
     'use strict';
 
-    var body, results_list,
-        city_location = city_location,
-        location_cities = location_cities;
+    var body, results_list;
 
 
 
@@ -189,7 +187,12 @@
 
         //Locality Analyser
         function analyse_locality(){
-            search_locality(query, getLocalityResults.bind(this, filter_object.filters));   
+            if(query){
+                search_locality(query, getLocalityResults.bind(this, filter_object.filters));
+            }
+            else{
+                done_callback.call(null,filter_object);
+            }
         }
         function search_locality(str,callback){
              var matched_str, 
@@ -437,7 +440,7 @@
     }
 
     $(document).ready(initialize);
-})(city_location,location_cities);
+})(city_location,location_cities, cities);
 
 
 
