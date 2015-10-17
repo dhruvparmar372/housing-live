@@ -1,7 +1,7 @@
 (function(city_location,location_cities, cities, states){
     'use strict';
 
-    var body, results_list;
+    var body, results_list, tags_list;
     var wave_form,wave_container;
 
 
@@ -63,7 +63,7 @@
                     if (exp_text.indexOf(apt_type) > -1){
                         text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
                         text = text.replace(' s ', '');
-                        return {id: [i+1], updated_text: text, apartment_type_tags : apartment_type_id[i][j]};
+                        return {id: [i+1], updated_text: text, apartment_type_tag : apartment_type_id[i][j]};
                     }
                     j++;
                 }
@@ -79,14 +79,14 @@
                     if (exp_text.indexOf(apt_type) > -1){
                         text = text.replace(apartment_type_id[i][j].toLowerCase() , '');
                         text = text.replace(' s ', '');
-                        return {id: [i+1], updated_text: text, apartment_type_tags : apartment_type_id[i][j]};
+                        return {id: [i+1], updated_text: text, apartment_type_tag : apartment_type_id[i][j]};
                     }
                     j++;
                 }
                 i++;
             }
             post_elements = get_post_filter_keywords()
-            return{id: [], updated_text: text, apartment_type_tags: []}
+            return{id: [], updated_text: text, apartment_type_tag: []}
         }
 
         function get_filter_keywords(){
@@ -248,7 +248,10 @@
                      success: function(data){
                          console.log("housing api result is ");
                          console.log(data);
-                         callback(data[0].uuid);
+                         callback({
+                            id   : data[0].uuid,
+                            name : data[0].name
+                         });
                      }
                  })
              }
@@ -256,9 +259,10 @@
                  done_callback.call(null,filter_object);
              }
         }
-        function getLocalityResults(filters, localityId){
-            console.log("Location id is "+localityId);
-            filters.poly = localityId;
+        function getLocalityResults(filters, locality_details){
+            console.log("Location is "+locality_details);
+            filters.poly = locality_details.id;
+            filters.poly_tag = locality_details.name;
             done_callback.call(null,filter_object);
         }
 
@@ -272,7 +276,7 @@
         var apt_result = analyse_apartment_type(query);
         query = apt_result.updated_text;
         filter_object.filters.apartment_type_id = apt_result.id;
-        filter_object.apartment_type_tags = apt_result.apartment_type_tags;
+        filter_object.apartment_type_tag = apt_result.apartment_type_tag;
         analyse_budget();
         analyse_locality();
 
@@ -401,6 +405,10 @@
             sort_key         : "relevance",
             results_per_page : 30
         };
+
+        var tags = [];
+        if(options.apartment_type_tag)
+            tags.push(options.apartment_type_tag);
         
         
         var options     = $.extend(options,defaults),
@@ -412,6 +420,21 @@
         if(options.services.length === 0)
             options.services = defaults.services;
 
+        if(options.filter && options.filter.poly_tag)
+            tags.push(options.filter.poly_tag);
+
+        var price_tag = "";
+        if(options.filters && options.filters['min_price']){
+            price_tag = get_formatted_price(options.filters['min_price']);
+        }
+        if(options.filters && options.filters['max_price']){
+            if(price_tag)
+                price_tag += " - " + get_formatted_price(options.filters['max_price']);
+            else
+                price_tag = get_formatted_price(options.filters['max_price']);
+        }
+        if(price_tag)
+            tags.push(price_tag);
      
         //build filter url
         var build_url = function(filter_object,service){
@@ -458,6 +481,10 @@
         }
 
 
+        function get_formatted_price(price){
+            return "Rs. "+price;
+        }
+
 
         RSVP.Promise.all(options.services.map(function(service){
             var url = build_url(options.filters,service);
@@ -467,6 +494,10 @@
             });
         })).then(function(service_results){
             
+            var tags_list = tags.reduce(function(list,tag){
+                var str = "<li class='tag-item'>"+tag+"</li>";
+                return list.append($(str));
+            },$("<ul class='tags-list'></ul>"));
             var rendered = service_results.map(function(s_result){
                 var results = s_result.results,
                     service_obj = s_map[s_result.service];
@@ -475,8 +506,7 @@
                     return list.append(service_obj.get_rendered_item(result));
                 },$("<div class='result-list'></div>"));
             });
-            
-            $element.append(rendered);
+            $element.append(tags_list).append(rendered);
         });
     }
 
