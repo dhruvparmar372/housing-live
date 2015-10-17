@@ -186,7 +186,7 @@ html,body {
 .help-line{
     font-weight: bold;
 }
-#wave-container { position: relative;margin:60px; margin-bottom: 30px;}
+#wave-container { position: relative;margin: 30px; margin-bottom: 30px;}
 #wave-container .dummy-line {
     position           : absolute;
     top                : 50%;
@@ -341,6 +341,17 @@ body.top-search-bar #top-header{
 
 
 @media only screen and (max-device-width: 375px) {
+    #page-title{
+        font-size: 46px;
+    }
+    #search-box #start-search-btn{
+        padding: 19px 56px;
+        width: 230px;
+    }
+    #search-box  #close-search-btn{
+        padding: 19px 56px;
+        width: 230px;
+    }
     #help-text{
         padding: 10px;
     }
