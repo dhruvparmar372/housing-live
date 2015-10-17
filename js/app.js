@@ -2,6 +2,7 @@
     'use strict';
 
     var body, results_list;
+    var wave_form,wave_container;
 
 
 
@@ -273,6 +274,7 @@
                 return;
             self.listening = true;
             element.addClass("loading");
+            wave_container.removeClass('inactive');
             recognizer.start();
         }
 
@@ -420,6 +422,7 @@
     
     function analysis_done(filter_object){
         var results_list = new ResultsList($.extend(filter_object,{append_to:"#results-list"}));
+        wave_container.addClass('inactive');
     }
 
     function analyse_elements(text){
@@ -429,6 +432,7 @@
     function cache_nodes(){
         body = $('body');
         results_list = $("#results-list");
+        wave_container = $("#wave-container");
     }
 
     var initialize = function(){
@@ -437,6 +441,19 @@
             append_to     : "#search-box",
             done_callback : analyse_elements
         });
+        
+        var wave_width = Math.min($(window).innerWidth()*0.8,600),
+            wave_container = $('#wave-container').addClass('inactive');
+        
+        wave_form = new SiriWave9({
+                        width     : 600,
+                        height    : Math.floor(wave_width/3),
+                        speed     : 1,
+                        container : document.getElementById('wave-container'),
+                        autostart : true
+                    });
+
+
     }
 
     $(document).ready(initialize);
