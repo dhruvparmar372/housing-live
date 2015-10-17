@@ -4,7 +4,8 @@
     var body, results_list;
     var filter_tokens = ["type","kind","size","specifications","for","Google","requirement","in","location","near","around","nearby","should","be","locationshould",,"am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","middle", "within", "between", "mid"];
     // var filter_tokens = ["Apartment","of","type","kind","size","specifications","area","rooms","home","house","for","a","an","apartment","flight","flat","property","duplex","search","find","me","get","query","Google","give","need","want","look","up","requirement","provide","result","the","bring","in","Indore","location","near","around","nearby","15","Powai","should","be","locationshould","I","am","looking","searching","locate","locality","city","within","star","villas","situated","located","locations","you","to","Kishan","built","created","made","put","lookup","constructed","construction","aided","situation","locationin","price","range","budget","cost","MRP","money","specification","value","selling","costing","upto","expensive","cheap","and","silsele","caused","by","face","middle", "within", "between", "mid"];
-    
+    var price_keywords = ['lakhs', 'lakh', 'million', 'millions', 'crore', 'crores', 'thousand', 'thousands']
+    var price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000']
     function get_apartment_type_mapping(){
         return [
             ['1 RK', '1 Room', '1 Room'],
@@ -122,11 +123,38 @@
         return {};
     }
 
+    function purify_budget(text){
+        var purified_text = [];
+        text= text.split(' ');
+        var new_text = []
+        text.forEach(function(elem, index){
+            var price_index = price_keywords.indexOf(elem);
+            var usable_index = text.indexOf(elem);
+            var converted_value = 0;
+            var converted_value_key = 0;
+            if ((price_index != -1) && (usable_index > 0)){
+                converted_value_key = text[usable_index-1];
+                if (parseInt(converted_value_key)){
+                    converted_value = converted_value_key*price_value[price_index];
+                    new_text.push(converted_value);
+                }
+                else
+                {
+                    new_text.push(elem);
+                }
+            }
+            else {
+                new_text.push(elem);
+            }
+        })
+        return new_text.join(' ');
+    }
     function analyse_elements(text){
         var apartment_element, budget_element, service_obj;
         // Convert tokens to lowercase
         var filters ={}
         var lowerText = text.toLowerCase();
+        var purified_text = '';
         // Analyse service
         // Remove All is am are
         // Analyse BHK
@@ -135,7 +163,10 @@
         filters.service = service_obj.service
         apartment_element = get_apartment_type(service_obj.updated_text);
         filters.apartment_type_id = apartment_element.id;
-        budget_element = get_budget_range(apartment_element.updated_text);
+        
+        purified_text = apartment_element.updated_text.replace('-', ' ');
+        purified_text = purify_budget(apartment_element.updated_text);
+        budget_element = get_budget_range(purified_text);
         filters.min_price = budget_element.min_budget;
         filters.max_price = budget_element.max_budget;
         if(apartment_element.updated_text){
