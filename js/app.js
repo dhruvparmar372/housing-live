@@ -19,6 +19,7 @@
             price_value = ['100000','100000', '1000000','1000000','10000000','10000000', '10000', '10000'],
             query = query && query.toLowerCase();
         
+        ga('send','event','query','submitted', query);
         query = " " + query + " "
         query = replaceAll(' to ', ' 2 ', query);
         query = replaceAll(' by ', ' buy ', query);
@@ -317,6 +318,7 @@
                 $("#start-search-btn").removeClass('pulse')
             },400)
             wave_container.removeClass('inactive');
+            $('#guide-text').text('I am listening now ... ')
             recognizer.start();
         }
         var start_recording_and_scroll = function(){
@@ -329,6 +331,7 @@
             }
             element.removeClass("loading");
             wave_container.addClass('inactive');
+            $('#guide-text').text('Say 1 BHK in Powai between 10000 to 20000...');
             recognizer.stop();
         }
 
@@ -397,14 +400,15 @@
                     var tag = result.type == 'project' ? '_m' : 'medium';
                     var h_url = "https://housing.com"+result.inventory_canonical_url;
                     var image = result.thumb_image_url ? result.thumb_image_url.replace('version', tag) : '';
-                    var bg_url = "background-image: url("+image+");"
+                    var bg_url = "background-image: url("+image+");";
+                    var price_string = result.price_on_request ? "Price on request" : (" &#8377; "+result.formatted_price);
                     var temp_str = "<a class='result pull-left' target='_blank' service='buy' data-id="+ result.id+" href="+h_url +">" +
                                         "<div class='image-wrapper'><div class='image-container' style='"+bg_url+"'>" +
                                         "</div></div>" +
                                         "<div class='details-container'>" +
                                             "<div class='apartment-type ellipsis'>" + result.title +"</div>" +
                                             "<div class='locality'>" + result.street_info +"</div>" +
-                                            "<div class='price'> &#8377; " + result.formatted_price + "</div>" +
+                                            "<div class='price'>" + price_string + "</div>" +
                                         "</div>" +
                                     "</a>";
                     return $(temp_str);
@@ -644,6 +648,9 @@
         setTimeout(function(){
             $('.dummy-line').addClass('addColor')
         },1500)
+        setTimeout(function(){
+            $('#powered-by-housing').addClass('move')
+        },2500)
         
     }
     function bind_events(){
